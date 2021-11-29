@@ -1,0 +1,12 @@
+extends ../layouts/application.pug
+
+block content
+  h1 Topics
+  if !topics || topics.length === 0
+    p
+      img(src="https://cdn.frankerfacez.com/emoticon/354554/4" alt="pepegeokay")
+      | There are no topics yet...
+  else
+    ul
+      each topic in topics
+        h3: a(href=`/topics/${topic.id}`)= topic.title
