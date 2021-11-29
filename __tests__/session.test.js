@@ -46,12 +46,6 @@ describe('requests', () => {
     expect(res).toHaveHTTPStatus(302);
   });
 
-  it('GET /', async () => {
-    const res = await request(getApp())
-      .get('/');
-    expect(res).toHaveHTTPStatus(200);
-  });
-
   it('GET /users/new', async () => {
     const res = await request(getApp())
       .get('/users/new');
