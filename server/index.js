@@ -2,6 +2,7 @@ import Express from 'express';
 import session from 'express-session';
 import path from 'path';
 import methodOverride from 'method-override';
+import httpError from 'http-errors';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
 import User from './entities/User.js';
@@ -35,6 +36,15 @@ export default () => {
     }
     next();
   });
+
+  app.httpError = httpError;
+
+  app.requiredAuth = (_req, res, next) => {
+    if (res.locals.currentUser.isGuest()) {
+      return next(new app.httpError.Forbidden('Not authorized'));
+    }
+    return next();
+  };
 
   addRoutes(app);
 
