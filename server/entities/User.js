@@ -7,6 +7,7 @@ class User {
     this.email = email;
     this.name = name;
     this.passwordDigest = encrypt(password);
+    this.registrationDate = Date.now();
     this.guest = false;
     this.admin = false;
   }
