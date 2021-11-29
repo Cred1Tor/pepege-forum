@@ -33,7 +33,7 @@ export default (app) => {
 
     if (Object.keys(errors).length === 0) {
       const topic = new Topic(title, body, res.locals.currentUser);
-      app.modelstopics.push(topic);
+      app.models.topics.push(topic);
       res.redirect(`/topics/${topic.id}`);
       return;
     }
