@@ -24,6 +24,7 @@ export default () => {
     saveUninitialized: false,
   }));
   app.use(methodOverride('_method'));
+  app.use(Express.urlencoded({ extended: true }));
 
   app.use((req, res, next) => {
     if (req.session?.email) {
