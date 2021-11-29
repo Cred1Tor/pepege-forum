@@ -55,6 +55,7 @@ export default () => {
 
   app.models = {};
   app.models.users = users;
+  app.models.topics = [];
 
   return app;
 };
