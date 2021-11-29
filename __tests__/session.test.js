@@ -54,7 +54,7 @@ describe('requests', () => {
 
   it('POST /users', async () => {
     const query = request(getApp());
-    const data = { email: 'email', password: 'qwer' };
+    const data = { email: 'email@email', name: 'name', password: 'qwer' };
 
     const res = await query
       .post('/users')
