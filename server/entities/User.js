@@ -1,16 +1,14 @@
-import encrypt from '../utils/encrypt.js';
+import encrypt from '../utils/encrypt';
 
-export default class User {
-  static id = 1;
-  guest = false;
-  admin = false;
-
+class User {
   constructor(email, name, password) {
     this.id = this.constructor.id;
     this.constructor.id += 1;
     this.email = email;
     this.name = name;
     this.passwordDigest = encrypt(password);
+    this.guest = false;
+    this.admin = false;
   }
 
   isGuest() {
@@ -25,3 +23,6 @@ export default class User {
     return encrypt(password) === this.passwordDigest;
   }
 }
+
+User.id = 1;
+export default User;
