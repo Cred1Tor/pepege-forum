@@ -1,7 +1,9 @@
-import users from './users.js';
-import session from './session.js';
+import users from './users';
+import session from './session';
+import welcome from './welcome';
 
 const controllers = [
+  welcome,
   users,
   session,
 ];
