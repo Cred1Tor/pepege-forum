@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
 import User from './entities/User.js';
 import Admin from './entities/Admin.js';
+import Guest from './entities/Guest.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +24,16 @@ export default () => {
     saveUninitialized: false,
   }));
   app.use(methodOverride('_method'));
+
+  app.use((req, res, next) => {
+    if (req.session?.email) {
+      const { email } = req.session;
+      res.locals.currentUser = app.models.users.find((user) => user.email === email);
+    } else {
+      res.locals.currentUser = new Guest();
+    }
+    next();
+  });
 
   addRoutes(app);
 
