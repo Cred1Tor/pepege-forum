@@ -1,6 +1,7 @@
 import Express from 'express';
 import session from 'express-session';
 import path from 'path';
+import methodOverride from 'method-override';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
 import User from './entities/User.js';
@@ -21,6 +22,7 @@ export default () => {
     resave: false,
     saveUninitialized: false,
   }));
+  app.use(methodOverride('_method'));
 
   addRoutes(app);
 
