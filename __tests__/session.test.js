@@ -1,7 +1,6 @@
 import request from 'supertest';
 import jestSupertestMatchers from 'jest-supertest-matchers';
-
-import getApp from '../server/index';
+import getApp from '../server/index.js';
 
 const { default: matchers } = jestSupertestMatchers;
 
