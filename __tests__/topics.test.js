@@ -27,7 +27,7 @@ describe('requests', () => {
   it('GET /topics/new (unauthorized)', async () => {
     const res = await request(getApp())
       .get('/topics/new');
-    expect(res).toHaveHTTPStatus(401);
+    expect(res).toHaveHTTPStatus(403);
   });
 
   it('POST /topics', async () => {
@@ -113,6 +113,6 @@ describe('requests', () => {
     const url = res1.headers.location.match(/\/topics\/\d+/)[0];
     const res2 = await request(app)
       .delete(url);
-    expect(res2).toHaveHTTPStatus(401);
+    expect(res2).toHaveHTTPStatus(403);
   });
 });
