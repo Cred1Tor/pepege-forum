@@ -1,6 +1,6 @@
-import users from './users';
-import session from './session';
-import welcome from './welcome';
+import users from './users.js';
+import session from './session.js';
+import welcome from './welcome.js';
 
 const controllers = [
   welcome,

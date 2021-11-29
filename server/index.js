@@ -1,8 +1,8 @@
 import Express from 'express';
 import session from 'express-session';
-import addRoutes from './routes/index';
-import User from './entities/User';
-import Admin from './entities/Admin';
+import addRoutes from './routes/index.js';
+import User from './entities/User.js';
+import Admin from './entities/Admin.js';
 
 export default () => {
   const app = new Express();

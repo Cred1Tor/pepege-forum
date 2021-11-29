@@ -1,4 +1,4 @@
-import encrypt from '../utils/encrypt';
+import encrypt from '../utils/encrypt.js';
 
 class User {
   constructor(email, name, password) {
