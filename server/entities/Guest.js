@@ -1,5 +1,7 @@
 export default class Guest {
-  guest = true;
+  constructor() {
+    this.guest = true;
+  }
 
   isGuest() {
     return this.guest;
