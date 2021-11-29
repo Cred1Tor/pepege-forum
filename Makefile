@@ -3,3 +3,6 @@ start:
 
 test:
 	npm test -s
+
+lint:
+	npx eslint .
