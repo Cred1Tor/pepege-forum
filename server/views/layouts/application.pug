@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+  head: title Pepege Forum
+  body
+    if currentUser.isGuest()
+      ul
+        li
+          a(href="/session/new") Sign in
+        li
+          a(href="/users/new") Sign up
+    else
+      ul
+        li
+          a(href="/topics") Topics
+        li
+          a(href="/topics/new") New topic
+        li
+          form(action='/session?_method=DELETE' method='post')
+            button(type='submit') Sign out
+
+    block content
