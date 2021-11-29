@@ -1,6 +1,6 @@
 export default (app) => {
   app.get('/session/new', (req, res) => {
-    res.render('session/new', { form: {}, errors: {} });
+    res.render('session/new', { form: {} });
   });
 
   app.post('/session', (req, res) => {
