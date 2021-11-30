@@ -1,4 +1,6 @@
-class Topic {
+export default class Topic {
+  static id = 1;
+
   constructor(title, body, creator) {
     this.title = title;
     this.body = body;
@@ -15,7 +17,3 @@ class Topic {
     this.editionDate = new Date();
   }
 }
-
-Topic.id = 1;
-
-export default Topic;
