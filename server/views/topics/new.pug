@@ -6,7 +6,11 @@ block content
     div
       label Title
         input(type='text' name='title' value=form.title)
+      if errors.title
+        p= errors.title
     div
       label Body
         textarea(name='body' cols=70 rows=15)= form.body
+      if errors.body
+        p= errors.body
     input(type='submit' value='Create topic')
