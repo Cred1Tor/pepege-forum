@@ -4,6 +4,9 @@ block content
   h2= topic.title
   p(style="white-space: pre-wrap;")= topic.body
   p: i= `Posted by ${topic.creator.name} on ${topic.creationDate.toLocaleString()}`
+  if topic.editor
+    - const byEditor = topic.editor.name === topic.creator.name ? '' : ` by ${topic.editor.name}`
+    p: i= `Edited: ${topic.editionDate.toLocaleString()}${byEditor}`
   if topic.creator.id === currentUser.id || currentUser.isAdmin()
     a(href=`/topics/${topic.id}/edit`) Edit
     form(style="display: inline" action=`/topics/${topic.id}?_method=DELETE` method='post')
