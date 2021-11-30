@@ -88,6 +88,7 @@ export default (app) => {
       next(new app.httpError.NotFound('Topic not found'));
     }
 
+    app.models.topics = app.models.topics.filter(({ id }) => topic.id !== id);
     res.status(302).render('topics/index', { topics: app.models.topics });
   });
 
