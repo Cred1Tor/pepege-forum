@@ -41,7 +41,7 @@ export default () => {
 
   app.requiredAuth = (_req, res, next) => {
     if (res.locals.currentUser.isGuest()) {
-      return next(new app.httpError.Forbidden('Not authorized'));
+      return next(new app.httpError.Forbidden('You have to sign in first'));
     }
     return next();
   };
