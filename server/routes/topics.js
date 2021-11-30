@@ -1,6 +1,15 @@
 import Topic from '../entities/Topic.js';
 
 export default (app) => {
+  const verifyTopicId = (req, _res, next) => {
+    const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
+
+    if (!topic) {
+      next(new app.httpError.NotFound('Topic not found'));
+    }
+
+    next();
+  };
   app.get('/topics', (_req, res) => {
     res.render('topics/index', { topics: app.models.topics });
   });
@@ -9,13 +18,8 @@ export default (app) => {
     res.render('topics/new', { form: {}, errors: {} });
   });
 
-  app.get('/topics/:id', (req, res, next) => {
+  app.get('/topics/:id', verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
-
-    if (!topic) {
-      next(new app.httpError.NotFound('Topic not found'));
-    }
-
     res.render('topics/show', { topic });
   });
 
@@ -42,22 +46,13 @@ export default (app) => {
     res.render('topics/new', { form: req.body, errors });
   });
 
-  app.get('/topics/:id/edit', app.requiredAuth, (req, res, next) => {
+  app.get('/topics/:id/edit', app.requiredAuth, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
-
-    if (!topic) {
-      next(new app.httpError.NotFound('Topic not found'));
-    }
-
     res.render('topics/edit', { topic, form: topic, errors: {} });
   });
 
-  app.patch('/topics/:id', app.requiredAuth, (req, res, next) => {
+  app.patch('/topics/:id', app.requiredAuth, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
-
-    if (!topic) {
-      next(new app.httpError.NotFound('Topic not found'));
-    }
 
     const { title, body } = req.body;
     const errors = {};
@@ -80,12 +75,8 @@ export default (app) => {
     res.render('topics/edit', { topic, form: req.body, errors });
   });
 
-  app.delete('/topics/:id', app.requiredAuth, (req, res, next) => {
+  app.delete('/topics/:id', app.requiredAuth, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
-
-    if (!topic) {
-      next(new app.httpError.NotFound('Topic not found'));
-    }
 
     app.models.topics = app.models.topics.filter(({ id }) => topic.id !== id);
     res.status(302).render('topics/index', { topics: app.models.topics });
