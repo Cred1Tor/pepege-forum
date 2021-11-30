@@ -4,3 +4,7 @@ block content
   h2= topic.title
   p= topic.body
   p: i= `Posted by ${topic.creator.name} on ${topic.creationDate.toLocaleString()}`
+  if topic.creator.id === currentUser.id || currentUser.isAdmin()
+    a(href=`/topics/${topic.id}/edit`) Edit
+    form(style="display: inline" action=`/topics/${topic.id}?_method=DELETE` method='post')
+      button(type='submit') Delete
