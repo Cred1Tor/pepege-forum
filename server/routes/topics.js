@@ -77,7 +77,7 @@ export default (app) => {
     }
 
     if (Object.keys(errors).length === 0) {
-      topic.edit(title, body, res.currentUser);
+      topic.edit(title, body, res.locals.currentUser);
       res.redirect(`/topics/${topic.id}`);
       return;
     }
