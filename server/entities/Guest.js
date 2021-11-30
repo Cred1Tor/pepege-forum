@@ -1,9 +1,13 @@
 export default class Guest {
-  constructor() {
-    this.guest = true;
-  }
+  guest = true;
+
+  admin = false;
 
   isGuest() {
     return this.guest;
+  }
+
+  isAdmin() {
+    return this.admin;
   }
 }
