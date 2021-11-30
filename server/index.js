@@ -57,5 +57,14 @@ export default () => {
   app.models.users = users;
   app.models.topics = [];
 
+  app.use((_req, _res, next) => {
+    next(new app.httpError.NotFound('Page not found'));
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  app.use((error, _req, res, _next) => {
+    res.status(error.status || 500).render('errors/index', { error });
+  });
+
   return app;
 };
