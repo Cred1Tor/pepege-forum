@@ -9,3 +9,9 @@ parserOptions:
   sourceType: module
 rules:
   import/extensions: 0
+  no-param-reassign:
+    - error
+    - props: true
+      ignorePropertyModificationsFor:
+      - app
+
