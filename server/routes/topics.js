@@ -10,6 +10,17 @@ export default (app) => {
 
     next();
   };
+
+  const authorizeForEdition = (req, res, next) => {
+    const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
+
+    if (topic.creator.id === res.currentUser.id || res.currentUser.isAdmin()) {
+      next();
+    }
+
+    next(new app.httpError.Forbidden('You are not authorized to edit this topic'));
+  };
+
   app.get('/topics', (_req, res) => {
     res.render('topics/index', { topics: app.models.topics });
   });
@@ -46,12 +57,12 @@ export default (app) => {
     res.render('topics/new', { form: req.body, errors });
   });
 
-  app.get('/topics/:id/edit', app.requiredAuth, verifyTopicId, (req, res) => {
+  app.get('/topics/:id/edit', authorizeForEdition, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
     res.render('topics/edit', { topic, form: topic, errors: {} });
   });
 
-  app.patch('/topics/:id', app.requiredAuth, verifyTopicId, (req, res) => {
+  app.patch('/topics/:id', authorizeForEdition, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
 
     const { title, body } = req.body;
@@ -75,7 +86,7 @@ export default (app) => {
     res.render('topics/edit', { topic, form: req.body, errors });
   });
 
-  app.delete('/topics/:id', app.requiredAuth, verifyTopicId, (req, res) => {
+  app.delete('/topics/:id', authorizeForEdition, verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
 
     app.models.topics = app.models.topics.filter(({ id }) => topic.id !== id);
