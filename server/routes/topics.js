@@ -15,6 +15,7 @@ export default (app) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
 
     if (topic.creator.id === res.locals.currentUser.id || res.locals.currentUser.isAdmin()) {
+      res.locals.authorized = true;
       return next();
     }
 
