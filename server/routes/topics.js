@@ -14,8 +14,7 @@ export default (app) => {
   const authorizeForEdition = (req, res, next) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.id);
 
-    if (topic.creator.id === res.currentUser.id || res.currentUser.isAdmin()) {
-      next();
+    if (topic.creator.id === res.locals.currentUser.id || res.locals.currentUser.isAdmin()) {
     }
 
     next(new app.httpError.Forbidden('You are not authorized to edit this topic'));
