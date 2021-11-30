@@ -1,8 +1,8 @@
 class Topic {
-  constructor(title, body, author) {
+  constructor(title, body, creator) {
     this.title = title;
     this.body = body;
-    this.author = author;
+    this.creator = creator;
     this.creationDate = new Date();
     this.id = this.constructor.id;
     this.constructor.id += 1;
