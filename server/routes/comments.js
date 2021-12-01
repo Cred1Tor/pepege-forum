@@ -43,13 +43,13 @@ export default (app) => {
     }
 
     res.status(422);
-    res.render(`/topics/${topic.id}`, { topic, commentForm: req.body, errors });
+    res.render('topics/show', { topic, commentForm: req.body, errors });
   });
 
   app.delete('/topics/:topicId/comments/:commentId', verifyCommentId, authorizeForCommentEdition, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.topicId);
     topic.deleteComment(Number(req.params.commentId));
-    res.status.render('topics/show', { topic, commentForm: {}, errors: {} });
+    res.render('topics/show', { topic, commentForm: {}, errors: {} });
   });
 
   return app;
