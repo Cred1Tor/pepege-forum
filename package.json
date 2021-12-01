@@ -1,5 +1,5 @@
 {
-  "name": "forum",
+  "name": "pepege-forum",
   "type": "module",
   "version": "1.0.0",
   "description": "a simple forum, where users can sign in, create topics and leave comments",
