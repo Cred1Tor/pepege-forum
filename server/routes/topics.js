@@ -12,6 +12,7 @@ export default (app) => {
 
   app.get('/topics/:topicId', verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.topicId);
+    topic.viewCount += 1;
     res.render('topics/show', { topic, commentForm: {}, errors: {} });
   });
 
