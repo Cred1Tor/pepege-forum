@@ -8,18 +8,23 @@ export default (app) => {
   app.post('/users', (req, res) => {
     const { email, name, password } = req.body;
     const errors = {};
-    const userExists = app.models.users.some((user) => user.email === email);
+    const emailExists = app.models.users.some((user) => user.email === email);
+    const nameExists = app.models.users.some((user) => user.name === name);
 
     if (!/.+@.+/.test(email)) {
       errors.email = 'Wrong email format';
     }
 
-    if (userExists) {
+    if (emailExists) {
       errors.email = 'User with this email already exists';
     }
 
     if (!name) {
       errors.name = 'Name can\'t be blank';
+    }
+
+    if (nameExists) {
+      errors.name = 'User with this name already exists';
     }
 
     if (!password) {
