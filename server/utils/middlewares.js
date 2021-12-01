@@ -6,7 +6,7 @@ export const requiredAuth = (req, res, next) => {
 };
 
 export const verifyTopicId = (req, _res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.id);
+  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
 
   if (!topic) {
     next(new req.app.httpError.NotFound('Topic not found'));
@@ -16,7 +16,7 @@ export const verifyTopicId = (req, _res, next) => {
 };
 
 export const authorizeForTopicEdition = (req, res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.id);
+  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
 
   if (topic.creator.id === res.locals.currentUser.id || res.locals.currentUser.isAdmin()) {
     return next();
