@@ -9,4 +9,7 @@ block content
   else
     ul
       each topic in topics
-        h3: a(href=`/topics/${topic.id}`)= topic.title
+        .topic(style="border: solid 1px; margin: 10px 0px; padding: 0px 20px")
+          h3(style="margin: 5px 0px"): a(href=`/topics/${topic.id}`)= topic.title
+          p(style="margin: 0px 0px")= `views: ${topic.viewCount} comments: ${topic.commentCount}`
+          p(style="margin: 0px 0px")= `Author: ${topic.creator.name}`
