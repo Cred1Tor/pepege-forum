@@ -26,6 +26,7 @@ export default () => {
   }));
   app.use(methodOverride('_method'));
   app.use(Express.urlencoded({ extended: true }));
+  app.use('/assets', Express.static(path.join(__dirname, 'assets')));
 
   app.use((req, res, next) => {
     if (req.session?.email) {
