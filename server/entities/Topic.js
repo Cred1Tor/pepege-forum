@@ -28,6 +28,10 @@ export default class Topic {
     this.currentCommentId += 1;
   }
 
+  findComment(id) {
+    return this.comments.find((comment) => comment.id === id);
+  }
+
   deleteComment(id) {
     this.comments = this.comments.filter((comment) => comment.id !== id);
   }
