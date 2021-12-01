@@ -1,5 +1,11 @@
+import Comment from './Comment.js';
+
 export default class Topic {
   static id = 1;
+
+  comments = [];
+
+  currentCommentId = 1;
 
   constructor(title, body, creator) {
     this.title = title;
@@ -15,5 +21,14 @@ export default class Topic {
     this.body = body;
     this.editor = editor;
     this.editionDate = new Date();
+  }
+
+  addComment(body, creator) {
+    this.comments.push(new Comment(this, body, creator));
+    this.currentCommentId += 1;
+  }
+
+  deleteComment(id) {
+    this.comments = this.comments.filter((comment) => comment.id !== id);
   }
 }
