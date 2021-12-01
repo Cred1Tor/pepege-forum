@@ -12,7 +12,7 @@ export default (app) => {
 
   app.get('/topics/:topicId', verifyTopicId, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.topicId);
-    res.render('topics/show', { topic });
+    res.render('topics/show', { topic, commentForm: {}, errors: {} });
   });
 
   app.post('/topics', requiredAuth, (req, res) => {

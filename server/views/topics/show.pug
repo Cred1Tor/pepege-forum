@@ -9,6 +9,23 @@ block content
       - const byEditor = topic.editor.name === topic.creator.name ? '' : ` by ${topic.editor.name}`
       p: i= `Edited: ${topic.editionDate.toLocaleString()}${byEditor}`
     if topic.creator.id === currentUser.id || currentUser.isAdmin()
-      a(href=`/topics/${topic.id}/edit`) Edit
-      form(style="display: inline" action=`/topics/${topic.id}?_method=DELETE` method='post')
-        button(type='submit') Delete
+      a(href=`/topics/${topic.id}/edit`) Edit topic
+      form(style="display: inline; margin-left: 10px" action=`/topics/${topic.id}?_method=DELETE` method='post')
+        button(type='submit') Delete topic
+
+  each comment in topic.comments
+    .comment
+      p= comment.body
+      p: i= `Posted by ${comment.creator.name} on ${comment.creationDate.toLocaleString()}`
+      if comment.editor
+        - const byEditor = comment.editor.name === comment.creator.name ? '' : ` by ${comment.editor.name}`
+        p: i= `Edited: ${comment.editionDate.toLocaleString()}${byEditor}`
+      if comment.creator.id === currentUser.id || currentUser.isAdmin()
+        a(href=`/topics/${topic.id}/comments/${comment.id}/edit`) Edit comment
+        form(style="display: inline; margin-left: 10px" action=`/topics/${topic.id}/comments/${comment.id}?_method=DELETE` method='post')
+          button(type='submit') Delete comment
+
+  if !currentUser.isGuest()
+    form(style="margin-top: 20px" action=`/topics/${topic.id}/comments` method='post')
+      textarea(name='body' cols=79 rows=5)= commentForm.body
+      input(style="display: block" type='submit' value='Add comment')
