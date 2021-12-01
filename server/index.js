@@ -39,13 +39,6 @@ export default () => {
 
   app.httpError = httpError;
 
-  app.requiredAuth = (_req, res, next) => {
-    if (res.locals.currentUser.isGuest()) {
-      return next(new app.httpError.Forbidden('You have to sign in first'));
-    }
-    return next();
-  };
-
   addRoutes(app);
 
   const users = [
