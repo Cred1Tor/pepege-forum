@@ -18,7 +18,7 @@ export default (app) => {
     if (Object.keys(errors).length === 0) {
       const comment = topic.addComment(body, res.locals.currentUser);
       res.set('Comment-Id', comment.id);
-      res.status(201).render(`/topics/${topic.id}`, { topic, commentForm: {}, errors: {} });
+      res.status(201).render('topics/show', { topic, commentForm: {}, errors: {} });
       return;
     }
 
@@ -38,7 +38,7 @@ export default (app) => {
     if (Object.keys(errors).length === 0) {
       const comment = topic.findComment(Number(req.params.commentId));
       comment.edit(body, res.locals.currentUser);
-      res.render('/topics/show', { topic, commentForm: {}, errors: {} });
+      res.render('topics/show', { topic, commentForm: {}, errors: {} });
       return;
     }
 
