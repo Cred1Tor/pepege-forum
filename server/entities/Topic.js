@@ -24,8 +24,10 @@ export default class Topic {
   }
 
   addComment(body, creator) {
-    this.comments.push(new Comment(this, body, creator));
+    const comment = new Comment(this, body, creator);
+    this.comments.push(comment);
     this.currentCommentId += 1;
+    return comment;
   }
 
   findComment(id) {
