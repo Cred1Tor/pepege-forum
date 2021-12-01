@@ -26,6 +26,12 @@ export default (app) => {
     res.render('topics/show', { topic, commentForm: req.body, errors });
   });
 
+  app.get('/topics/:topicId/comments/:commentId/edit', verifyCommentId, authorizeForCommentEdition, (req, res) => {
+    const topic = app.models.topics.find((t) => t.id.toString() === req.params.topicId);
+    const comment = topic.findComment(Number(req.params.commentId));
+    res.render('comments/edit', { comment, form: comment, errors: {} });
+  });
+
   app.patch('/topics/:topicId/comments/:commentId', verifyCommentId, authorizeForCommentEdition, (req, res) => {
     const topic = app.models.topics.find((t) => t.id.toString() === req.params.topicId);
     const { body } = req.body;
