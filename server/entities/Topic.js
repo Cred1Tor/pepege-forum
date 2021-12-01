@@ -7,6 +7,10 @@ export default class Topic {
 
   currentCommentId = 1;
 
+  viewCount = 0;
+
+  commentCount = 0;
+
   constructor(title, body, creator) {
     this.title = title;
     this.body = body;
@@ -27,6 +31,7 @@ export default class Topic {
     const comment = new Comment(this, body, creator);
     this.comments.push(comment);
     this.currentCommentId += 1;
+    this.commentCount += 1;
     return comment;
   }
 
@@ -36,5 +41,6 @@ export default class Topic {
 
   deleteComment(id) {
     this.comments = this.comments.filter((comment) => comment.id !== id);
+    this.commentCount -= 1;
   }
 }
