@@ -33,6 +33,10 @@ describe('requests', () => {
       .set('Cookie', authCookie)
       .send({ title: 'topic title', body: 'topic body' })
       .expect(302);
+
+    await request(app)
+      .get('/topics')
+      .expect(200, /topic title/);
   });
 
   it('POST /topics (errors)', async () => {
