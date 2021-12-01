@@ -58,7 +58,7 @@ describe('requests', () => {
       .type('form')
       .send({ body: 'new comment body' })
       .set('Cookie', userAuthCookie)
-      .expect(302, /new comment body/)
+      .expect(200, /new comment body/)
       .expect((response) => {
         expect(response.text).not.toMatch('old comment body');
       });
@@ -91,7 +91,7 @@ describe('requests', () => {
     await request(app)
       .delete(`/topics/${topicId}/comments/${commentId}`)
       .set('Cookie', userAuthCookie)
-      .expect(302)
+      .expect(200)
       .expect((response) => {
         expect(response.text).not.toMatch('comment body');
       });
@@ -125,7 +125,7 @@ describe('requests', () => {
       .type('form')
       .send({ body: 'new comment body' })
       .set('Cookie', adminAuthCookie)
-      .expect(302, /new comment body/)
+      .expect(200, /new comment body/)
       .expect((response) => {
         expect(response.text).not.toMatch('old comment body');
       });
@@ -133,7 +133,7 @@ describe('requests', () => {
     await request(app)
       .delete(`/topics/${topicId}/comments/${commentId}`)
       .set('Cookie', adminAuthCookie)
-      .expect(302)
+      .expect(200)
       .expect((response) => {
         expect(response.text).not.toMatch('comment body');
       });
