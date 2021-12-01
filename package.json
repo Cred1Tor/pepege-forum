@@ -5,7 +5,8 @@
   "description": "a simple forum, where users can sign in, create topics and leave comments",
   "main": "server/index.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "start": "NODE_ENV=production node server/bin/server.js"
   },
   "keywords": [
     "express",
