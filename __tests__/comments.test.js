@@ -18,7 +18,6 @@ describe('requests', () => {
       .set('Cookie', adminAuthCookie)
       .send({ title: 'topic title', body: 'topic body' });
 
-    // topicId = request.headers.location.match(/(?<=topics\/)(.*?)(?=\/)/);
     topicId = res.get('Topic-Id');
   });
 
