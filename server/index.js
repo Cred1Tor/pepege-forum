@@ -9,6 +9,7 @@ import User from './entities/User.js';
 import Admin from './entities/Admin.js';
 import Guest from './entities/Guest.js';
 
+import('dotenv').config();
 import('./db.js');
 
 // eslint-disable-next-line no-underscore-dangle
@@ -22,7 +23,7 @@ export default () => {
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'views'));
   app.use(session({
-    secret: 'secret key',
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
   }));
