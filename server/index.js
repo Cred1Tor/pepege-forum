@@ -6,9 +6,8 @@ import httpError from 'http-errors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
-import User from './entities/User.js';
-import Admin from './entities/Admin.js';
 import Guest from './entities/Guest.js';
+import models from './models/index.js';
 
 dotenv.config();
 import('./db.js');
@@ -46,14 +45,17 @@ export default async () => {
 
   addRoutes(app);
 
-  const users = [
-    new Admin('admin@admin', 'Aleksandr', 'qwerty'),
-    new User('user@user', 'pepe the frog', '123'),
-  ];
-
-  app.models = {};
-  app.models.users = users;
+  app.models = models;
   app.models.topics = [];
+
+  // const users = [
+  //   {
+  //     email: 'admin@admin.com', name: 'Aleksandr', password: 'qwerty', admin: true,
+  //   },
+  //   { email: 'user@user.org', name: 'pepe', password: '123' },
+  // ];
+
+  // await app.models.user.insertMany(users);
 
   app.use((_req, _res, next) => {
     next(new app.httpError.NotFound('Page not found'));
