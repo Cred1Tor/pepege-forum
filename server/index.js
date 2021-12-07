@@ -9,6 +9,8 @@ import User from './entities/User.js';
 import Admin from './entities/Admin.js';
 import Guest from './entities/Guest.js';
 
+import('./db.js');
+
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
 // eslint-disable-next-line no-underscore-dangle
