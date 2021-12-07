@@ -31,10 +31,10 @@ export default async () => {
   app.use(Express.urlencoded({ extended: true }));
   app.use('/assets', Express.static(path.join(__dirname, 'assets')));
 
-  app.use((req, res, next) => {
+  app.use(async (req, res, next) => {
     if (req.session?.email) {
       const { email } = req.session;
-      res.locals.currentUser = app.models.users.find((user) => user.email === email);
+      res.locals.currentUser = await app.models.user.findOne({ email });
     } else {
       res.locals.currentUser = new Guest();
     }
