@@ -3,13 +3,13 @@ import getApp from '../server/index.js';
 
 describe('requests', () => {
   it('GET /session/new', async () => {
-    await request(getApp())
+    await request(await getApp())
       .get('/session/new')
       .expect(200, /authentication/);
   });
 
   it('POST /session', async () => {
-    await request(getApp())
+    await request(await getApp())
       .post('/session')
       .type('form')
       .send({ email: 'admin@admin', password: 'qwerty' })
@@ -17,7 +17,7 @@ describe('requests', () => {
   });
 
   it('POST /session (errors)', async () => {
-    await request(getApp())
+    await request(await getApp())
       .post('/session')
       .type('form')
       .send({ email: 'admin@admin', password: 'wrongpassword' })
@@ -25,7 +25,7 @@ describe('requests', () => {
   });
 
   it('DELETE /session', async () => {
-    const app = getApp();
+    const app = await getApp();
     const authRes = await request(app)
       .post('/session')
       .type('form')
@@ -41,13 +41,13 @@ describe('requests', () => {
   });
 
   it('GET /users/new', async () => {
-    await request(getApp())
+    await request(await getApp())
       .get('/users/new')
       .expect(200, /registration/);
   });
 
   it('POST /users', async () => {
-    const app = getApp();
+    const app = await getApp();
     const data = { email: 'email@email', name: 'name', password: 'qwer' };
 
     await request(app)

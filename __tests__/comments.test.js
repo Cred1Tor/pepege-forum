@@ -9,7 +9,7 @@ describe('requests', () => {
   let topicId;
 
   beforeEach(async () => {
-    app = getApp();
+    app = await getApp();
     adminAuthCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
     userAuthCookie = await signIn(app, { email: 'user@user', password: '123' });
     const res = await request(app)
