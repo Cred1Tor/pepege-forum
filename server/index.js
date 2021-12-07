@@ -3,13 +3,14 @@ import session from 'express-session';
 import path from 'path';
 import methodOverride from 'method-override';
 import httpError from 'http-errors';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
 import User from './entities/User.js';
 import Admin from './entities/Admin.js';
 import Guest from './entities/Guest.js';
 
-import('dotenv').config();
+dotenv.config();
 import('./db.js');
 
 // eslint-disable-next-line no-underscore-dangle
