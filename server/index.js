@@ -34,7 +34,7 @@ export default async () => {
   app.use(async (req, res, next) => {
     if (req.session?.email) {
       const { email } = req.session;
-      res.locals.currentUser = await app.models.user.findOne({ email });
+      res.locals.currentUser = await app.models.User.findOne({ email });
     } else {
       res.locals.currentUser = new Guest();
     }
