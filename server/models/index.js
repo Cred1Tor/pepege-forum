@@ -1,3 +1,5 @@
-import user from './User.js';
+import User from './User.js';
+import Topic from './Topic.js';
+import Comment from './Comment.js';
 
-export default { user };
+export default { User, Topic, Comment };

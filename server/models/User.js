@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import encrypt from '../utils/encrypt.js';
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
