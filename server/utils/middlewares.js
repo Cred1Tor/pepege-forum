@@ -5,8 +5,8 @@ export const requiredAuth = (req, res, next) => {
   return next();
 };
 
-export const verifyTopicId = (req, _res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
+export const verifyTopicId = async (req, _res, next) => {
+  const topic = await req.app.models.Topic.findById(req.params.topicId);
 
   if (!topic) {
     next(new req.app.httpError.NotFound('Topic not found'));
@@ -15,8 +15,8 @@ export const verifyTopicId = (req, _res, next) => {
   next();
 };
 
-export const authorizeForTopicEdition = (req, res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
+export const authorizeForTopicEdition = async (req, res, next) => {
+  const topic = await req.app.models.Topic.findById(req.params.topicId);
 
   if (topic.creator.id === res.locals.currentUser.id || res.locals.currentUser.isAdmin()) {
     return next();
@@ -25,14 +25,14 @@ export const authorizeForTopicEdition = (req, res, next) => {
   return next(new req.app.httpError.Forbidden('You are not authorized to edit this topic'));
 };
 
-export const verifyCommentId = (req, _res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
+export const verifyCommentId = async (req, _res, next) => {
+  const topic = await req.app.models.Topic.findById(req.params.topicId);
 
   if (!topic) {
     return next(new req.app.httpError.NotFound('Topic not found'));
   }
 
-  const comment = topic.findComment(Number(req.params.commentId));
+  const comment = topic.comments.id(req.params.commentId);
 
   if (!comment) {
     return next(new req.app.httpError.NotFound('Comment not found'));
@@ -41,9 +41,9 @@ export const verifyCommentId = (req, _res, next) => {
   return next();
 };
 
-export const authorizeForCommentEdition = (req, res, next) => {
-  const topic = req.app.models.topics.find((t) => t.id.toString() === req.params.topicId);
-  const comment = topic.findComment(Number(req.params.commentId));
+export const authorizeForCommentEdition = async (req, res, next) => {
+  const topic = await req.app.models.Topic.findById(req.params.topicId);
+  const comment = topic.comments.id(req.params.commentId);
 
   if (comment.creator.id === res.locals.currentUser.id || res.locals.currentUser.isAdmin()) {
     return next();
