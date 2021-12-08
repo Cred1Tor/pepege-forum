@@ -32,4 +32,6 @@ block content
   if !currentUser.isGuest()
     form(action=`/topics/${topic.id}/comments` method='post')
       textarea(name='body' cols=79 rows=5)= commentForm.body
+      if errors.body
+        p= errors.body
       input(style="display: block" type='submit' value='Add comment')
