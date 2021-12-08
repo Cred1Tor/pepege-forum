@@ -15,7 +15,7 @@ export const commentSchema = new mongoose.Schema({
   editor: userSchema,
 });
 
-commentSchema.methods.edit = async function editTopic(newBody, editor) {
+commentSchema.methods.edit = async function editComment(newBody, editor) {
   await this.updateOne({ body: newBody, editor, editionDate: Date.now() });
 };
 
