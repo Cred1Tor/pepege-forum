@@ -5,14 +5,12 @@ export const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: true,
     lowercase: true,
     match: [/.+@.+\..+/, 'Wrong email format'],
   },
   name: {
     type: String,
     required: [true, 'Name is required'],
-    unique: true,
   },
   password: {
     type: String,
