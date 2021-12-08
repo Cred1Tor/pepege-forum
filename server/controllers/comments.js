@@ -43,7 +43,7 @@ export const patch = [
   verifyCommentId,
   authorizeForCommentEdition,
   async (req, res) => {
-    const topic = req.app.models.Topic.findById(req.params.topicId);
+    const topic = await req.app.models.Topic.findById(req.params.topicId);
     const { body } = req.body;
     const errors = {};
 
