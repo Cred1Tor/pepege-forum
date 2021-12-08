@@ -38,7 +38,7 @@ export const create = [
     }
 
     if (Object.keys(errors).length === 0) {
-      const topic = new Topic(title, body, res.locals.currentUser);
+      const topic = new Topic({ title, body, creator: res.locals.currentUser });
       await req.app.models.Topic.insertMany(topic);
       res.set('Topic-Id', topic.id);
       res.redirect(`/topics/${topic.id}`);
