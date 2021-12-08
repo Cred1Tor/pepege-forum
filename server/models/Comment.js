@@ -16,7 +16,10 @@ export const commentSchema = new mongoose.Schema({
 });
 
 commentSchema.methods.edit = async function editComment(newBody, editor) {
-  await this.updateOne({ body: newBody, editor, editionDate: Date.now() });
+  this.body = newBody;
+  this.editor = editor;
+  this.editionDate = Date.now();
+  await this.parent().save();
 };
 
 export default await mongoose.model('Comment', commentSchema);
