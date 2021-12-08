@@ -44,6 +44,7 @@ export const patch = [
   authorizeForCommentEdition,
   async (req, res) => {
     const topic = await req.app.models.Topic.findById(req.params.topicId);
+    const comment = topic.findComment(req.params.commentId);
     const { body } = req.body;
     const errors = {};
 
@@ -52,14 +53,13 @@ export const patch = [
     }
 
     if (Object.keys(errors).length === 0) {
-      const comment = topic.findComment(req.params.commentId);
       await comment.edit(body, res.locals.currentUser);
       res.render('topics/show', { topic, commentForm: {}, errors: {} });
       return;
     }
 
     res.status(422);
-    res.render('topics/show', { topic, commentForm: req.body, errors });
+    res.render('comments/edit', { comment, form: req.body, errors });
   },
 ];
 
