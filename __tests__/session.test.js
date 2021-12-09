@@ -1,5 +1,16 @@
 import request from 'supertest';
 import getApp from '../server/index.js';
+import dbHandler from './helpers/db-handler.js';
+import User from '../server/models/User.js';
+import users from '../__fixtures__/users.json';
+
+beforeAll(async () => dbHandler.connect());
+
+beforeEach(async () => User.insertMany(users));
+
+afterEach(async () => dbHandler.clearDatabase());
+
+afterAll(async () => dbHandler.closeDatabase());
 
 describe('requests', () => {
   it('GET /session/new', async () => {

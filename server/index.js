@@ -10,7 +10,10 @@ import Guest from './entities/Guest.js';
 import models from './models/index.js';
 
 dotenv.config();
-import('./db.js');
+
+if (process.env.NODE_ENV !== 'test') {
+  import('./db.js');
+}
 
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);

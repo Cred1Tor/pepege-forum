@@ -1,6 +1,18 @@
 import request from 'supertest';
 import getApp from '../server/index.js';
+import dbHandler from './helpers/db-handler.js';
+import User from '../server/models/User.js';
+import users from '../__fixtures__/users.json';
 import signIn from './helpers/signIn.js';
+
+beforeAll(async () => {
+  await dbHandler.connect();
+  await User.insertMany(users);
+});
+
+afterEach(async () => dbHandler.clearCollection('topics'));
+
+afterAll(async () => dbHandler.closeDatabase());
 
 describe('requests', () => {
   it('GET /topics', async () => {
@@ -116,7 +128,7 @@ describe('requests', () => {
 
   it('DELETE topics/:id (unauthorized)', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
       .type('form')
