@@ -49,16 +49,15 @@ export default async () => {
   addRoutes(app);
 
   app.models = models;
-  app.models.topics = [];
 
-  // const users = [
-  //   {
-  //     email: 'admin@admin.com', name: 'Aleksandr', password: 'qwerty', admin: true,
-  //   },
-  //   { email: 'user@user.org', name: 'pepe', password: '123' },
-  // ];
+  const users = [
+    {
+      email: 'admin@admin.com', name: 'Aleksandr', password: 'qwerty', admin: true,
+    },
+    { email: 'user@user.org', name: 'pepe', password: '123' },
+  ];
 
-  // await app.models.user.insertMany(users);
+  await app.models.User.insertMany(users).catch(() => {});
 
   app.use((_req, _res, next) => {
     next(new app.httpError.NotFound('Page not found'));
