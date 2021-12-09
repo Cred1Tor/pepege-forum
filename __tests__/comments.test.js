@@ -10,8 +10,8 @@ describe('requests', () => {
 
   beforeEach(async () => {
     app = await getApp();
-    adminAuthCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
-    userAuthCookie = await signIn(app, { email: 'user@user', password: '123' });
+    adminAuthCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
+    userAuthCookie = await signIn(app, { email: 'user@user.org', password: '123' });
     const res = await request(app)
       .post('/topics')
       .type('form')

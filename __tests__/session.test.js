@@ -12,7 +12,7 @@ describe('requests', () => {
     await request(await getApp())
       .post('/session')
       .type('form')
-      .send({ email: 'admin@admin', password: 'qwerty' })
+      .send({ email: 'admin@admin.com', password: 'qwerty' })
       .expect(302);
   });
 
@@ -20,7 +20,7 @@ describe('requests', () => {
     await request(await getApp())
       .post('/session')
       .type('form')
-      .send({ email: 'admin@admin', password: 'wrongpassword' })
+      .send({ email: 'admin@admin.com', password: 'wrongpassword' })
       .expect(422);
   });
 
@@ -29,7 +29,7 @@ describe('requests', () => {
     const authRes = await request(app)
       .post('/session')
       .type('form')
-      .send({ email: 'admin@admin', password: 'qwerty' })
+      .send({ email: 'admin@admin.com', password: 'qwerty' })
       .expect(302);
 
     const cookie = authRes.headers['set-cookie'];
@@ -48,7 +48,7 @@ describe('requests', () => {
 
   it('POST /users', async () => {
     const app = await getApp();
-    const data = { email: 'email@email', name: 'name', password: 'qwer' };
+    const data = { email: 'email@email.org', name: 'name', password: 'qwer' };
 
     await request(app)
       .post('/users')

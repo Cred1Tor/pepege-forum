@@ -11,7 +11,7 @@ describe('requests', () => {
 
   it('GET /topics/new', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     await request(app)
       .get('/topics/new')
       .set('Cookie', authCookie)
@@ -26,7 +26,7 @@ describe('requests', () => {
 
   it('POST /topics', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     await request(app)
       .post('/topics')
       .type('form')
@@ -41,7 +41,7 @@ describe('requests', () => {
 
   it('POST /topics (errors)', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     await request(app)
       .post('/topics')
       .set('Cookie', authCookie)
@@ -50,7 +50,7 @@ describe('requests', () => {
 
   it('GET topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
       .type('form')
@@ -66,7 +66,7 @@ describe('requests', () => {
 
   it('PATCH topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
       .type('form')
@@ -84,7 +84,7 @@ describe('requests', () => {
 
   it('PATCH topics/:id (unproccessable entity)', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
       .type('form')
@@ -100,7 +100,7 @@ describe('requests', () => {
 
   it('DELETE topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin', password: 'qwerty' });
+    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
       .type('form')
