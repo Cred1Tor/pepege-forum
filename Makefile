@@ -1,5 +1,5 @@
 start:
-	npx nodemon server/bin/server.js
+	npm start
 
 test:
 	npm test -s

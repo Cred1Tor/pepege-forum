@@ -8,12 +8,9 @@ import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
 import Guest from './entities/Guest.js';
 import models from './models/index.js';
+import users from './data/users.json';
 
 dotenv.config();
-
-if (process.env.NODE_ENV !== 'test') {
-  import('./db.js');
-}
 
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
@@ -51,14 +48,10 @@ export default async () => {
 
   app.models = models;
 
-  const users = [
-    {
-      email: 'admin@admin.com', name: 'Aleksandr', password: 'qwerty', admin: true,
-    },
-    { email: 'user@user.org', name: 'pepe', password: '123' },
-  ];
-
-  await app.models.User.insertMany(users).catch(() => {});
+  if (process.env.NODE_ENV !== 'test') {
+    import('./db.js');
+    await app.models.User.insertMany(users).catch(() => {});
+  }
 
   app.use((_req, _res, next) => {
     next(new app.httpError.NotFound('Page not found'));
