@@ -53,4 +53,4 @@ topicSchema.methods.deleteComment = async function deleteComment(id) {
   await this.save();
 };
 
-export default await mongoose.model('Topic', topicSchema);
+export default mongoose.model('Topic', topicSchema);

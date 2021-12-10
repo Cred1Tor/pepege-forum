@@ -43,4 +43,4 @@ userSchema.methods.verifyPassword = function verifyPassword(password) {
   return encrypt(password) === this.passwordDigest;
 };
 
-export default await mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

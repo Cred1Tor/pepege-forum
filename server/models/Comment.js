@@ -22,4 +22,4 @@ commentSchema.methods.edit = async function editComment(newBody, editor) {
   await this.parent().save();
 };
 
-export default await mongoose.model('Comment', commentSchema);
+export default mongoose.model('Comment', commentSchema);
