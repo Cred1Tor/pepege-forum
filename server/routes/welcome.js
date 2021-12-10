@@ -1,5 +1,5 @@
+import get from '../controllers/welcome.js';
+
 export default (app) => {
-  app.get('/', (_req, res) => {
-    res.render('welcome/index');
-  });
+  app.get('/', get);
 };
