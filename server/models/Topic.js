@@ -29,28 +29,4 @@ const topicSchema = new mongoose.Schema({
   },
 });
 
-topicSchema.methods.edit = async function editTopic(newTitle, newBody, editor) {
-  await this.updateOne({
-    title: newTitle, body: newBody, editor, editionDate: Date.now(),
-  });
-};
-
-topicSchema.methods.addComment = async function addComment(body, creator) {
-  const comment = new Comment({ body, creator });
-  this.comments.push(comment);
-  this.commentCount += 1;
-  await this.save();
-  return comment;
-};
-
-topicSchema.methods.findComment = function findComment(id) {
-  return this.comments.id(id);
-};
-
-topicSchema.methods.deleteComment = async function deleteComment(id) {
-  await this.comments.id(id).remove();
-  this.commentCount -= 1;
-  await this.save();
-};
-
 export default mongoose.model('Topic', topicSchema);

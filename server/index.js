@@ -1,12 +1,10 @@
 import Express from 'express';
-import session from 'express-session';
 import path from 'path';
 import methodOverride from 'method-override';
 import httpError from 'http-errors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index.js';
-import Guest from './entities/Guest.js';
 import models from './models/index.js';
 import users from './data/users.json';
 
@@ -22,25 +20,10 @@ export default async () => {
 
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'views'));
-  app.use(session({
-    secret: process.env.SESSION_KEY,
-    resave: false,
-    saveUninitialized: false,
-  }));
   app.use(methodOverride('_method'));
   app.use(Express.urlencoded({ extended: true }));
+  app.use(Express.json());
   app.use('/assets', Express.static(path.join(__dirname, 'assets')));
-
-  app.use(async (req, res, next) => {
-    if (req.session?.email) {
-      const { email } = req.session;
-      res.locals.currentUser = await app.models.User.findOne({ email })
-        .catch((err) => { throw err; });
-    } else {
-      res.locals.currentUser = new Guest();
-    }
-    next();
-  });
 
   app.httpError = httpError;
 
@@ -59,7 +42,7 @@ export default async () => {
 
   // eslint-disable-next-line no-unused-vars
   app.use((error, _req, res, _next) => {
-    res.status(error.status || 500).render('errors/index', { error });
+    res.status(error.status || 500).json(error);
   });
 
   return app;

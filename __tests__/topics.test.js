@@ -3,11 +3,15 @@ import getApp from '../server/index.js';
 import dbHandler from './helpers/db-handler.js';
 import User from '../server/models/User.js';
 import users from '../__fixtures__/users.json';
-import signIn from './helpers/signIn.js';
+import issueToken from './helpers/issueToken.js';
+
+let adminAuthLine;
 
 beforeAll(async () => {
   await dbHandler.connect();
   await User.insertMany(users);
+  const { id: adminId } = await User.findOne({ email: users[0].email });
+  adminAuthLine = `Bearer ${issueToken({ id: adminId }, process.env.JWT_SECRET)}`;
 });
 
 afterEach(async () => dbHandler.clearCollection('topics'));
@@ -18,33 +22,20 @@ describe('requests', () => {
   it('GET /topics', async () => {
     await request(await getApp())
       .get('/topics')
-      .expect(200, /Topics/);
-  });
-
-  it('GET /topics/new', async () => {
-    const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
-    await request(app)
-      .get('/topics/new')
-      .set('Cookie', authCookie)
-      .expect(200, /new topic/);
-  });
-
-  it('GET /topics/new (unauthorized)', async () => {
-    await request(await getApp())
-      .get('/topics/new')
-      .expect(403);
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveLength(0);
+      });
   });
 
   it('POST /topics', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'topic title', body: 'topic body' })
-      .expect(302);
+      .expect(200);
 
     await request(app)
       .get('/topics')
@@ -52,92 +43,99 @@ describe('requests', () => {
   });
 
   it('POST /topics (errors)', async () => {
-    const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
-    await request(app)
+    await request(await getApp())
       .post('/topics')
-      .set('Cookie', authCookie)
+      .set('Authorization', adminAuthLine)
       .expect(422);
   });
 
   it('GET topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'topic title', body: 'topic body' })
-      .expect(302);
+      .expect(200);
 
-    const url = res.headers.location;
+    // eslint-disable-next-line no-underscore-dangle
+    const topicId = res.body._id;
+
     await request(app)
-      .get(url)
+      .get(`/topics/${topicId}`)
       .expect(200, /topic body/);
   });
 
   it('PATCH topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'topic title', body: 'topic body' });
 
-    const url = res.headers.location;
+    // eslint-disable-next-line no-underscore-dangle
+    const topicId = res.body._id;
+    const newTopic = { title: 'new topic title', body: 'new topic body' };
+
     await request(app)
-      .patch(url)
-      .type('form')
-      .set('Cookie', authCookie)
-      .send({ title: 'new topic title', body: 'new topic body' })
-      .expect(302);
+      .patch(`/topics/${topicId}`)
+      .type('json')
+      .set('Authorization', adminAuthLine)
+      .send(newTopic)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toMatchObject(newTopic);
+      });
   });
 
   it('PATCH topics/:id (unproccessable entity)', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'post title', body: 'post body' });
 
-    const url = res.headers.location;
+    // eslint-disable-next-line no-underscore-dangle
+    const topicId = res.body._id;
+
     await request(app)
-      .patch(url)
-      .set('Cookie', authCookie)
+      .patch(`/topics/${topicId}`)
+      .set('Authorization', adminAuthLine)
       .expect(422);
   });
 
   it('DELETE topics/:id', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'post title', body: 'post body' });
 
-    const url = res.headers.location;
+    // eslint-disable-next-line no-underscore-dangle
+    const topicId = res.body._id;
+
     await request(app)
-      .delete(url)
-      .set('Cookie', authCookie)
-      .expect(302);
+      .delete(`/topics/${topicId}`)
+      .set('Authorization', adminAuthLine)
+      .expect(200);
   });
 
   it('DELETE topics/:id (unauthorized)', async () => {
     const app = await getApp();
-    const authCookie = await signIn(app, { email: 'admin@admin.com', password: 'qwerty' });
     const res = await request(app)
       .post('/topics')
-      .type('form')
-      .set('Cookie', authCookie)
+      .type('json')
+      .set('Authorization', adminAuthLine)
       .send({ title: 'post title', body: 'post body' });
 
-    const url = res.headers.location;
+    // eslint-disable-next-line no-underscore-dangle
+    const topicId = res.body._id;
+
     await request(app)
-      .delete(url)
-      .expect(403);
+      .delete(`/topics/${topicId}`)
+      .expect(401);
   });
 });

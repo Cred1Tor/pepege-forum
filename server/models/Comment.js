@@ -15,11 +15,4 @@ export const commentSchema = new mongoose.Schema({
   editor: userSchema,
 });
 
-commentSchema.methods.edit = async function editComment(newBody, editor) {
-  this.body = newBody;
-  this.editor = editor;
-  this.editionDate = Date.now();
-  await this.parent().save();
-};
-
 export default mongoose.model('Comment', commentSchema);

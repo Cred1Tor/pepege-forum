@@ -1,21 +1,18 @@
 import {
-  getIndex, getNewTopicForm, getTopicEditForm, getTopic, create, patch, remove,
+  getList, getTopic, create, patch, remove,
 } from '../controllers/topics.js';
+import { authorize, verifyTopicId, authorizeForTopicEdition } from '../utils/middlewares.js';
 
 export default (app) => {
-  app.get('/topics', getIndex);
+  app.get('/topics', getList);
 
-  app.get('/topics/new', getNewTopicForm);
+  app.get('/topics/:topicId', verifyTopicId, getTopic);
 
-  app.get('/topics/:topicId', getTopic);
+  app.post('/topics', authorize, create);
 
-  app.post('/topics', create);
+  app.patch('/topics/:topicId', authorize, verifyTopicId, authorizeForTopicEdition, patch);
 
-  app.get('/topics/:topicId/edit', getTopicEditForm);
-
-  app.patch('/topics/:topicId', patch);
-
-  app.delete('/topics/:topicId', remove);
+  app.delete('/topics/:topicId', authorize, verifyTopicId, authorizeForTopicEdition, remove);
 
   return app;
 };

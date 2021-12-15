@@ -1,10 +1,6 @@
 import User from '../models/User.js';
 
-export const getNewUserForm = (req, res) => {
-  res.render('users/new', { form: {}, errors: {} });
-};
-
-export const create = async (req, res, next) => {
+export default async (req, res, next) => {
   try {
     const newUser = new User(req.body);
     const errors = {};
@@ -33,12 +29,12 @@ export const create = async (req, res, next) => {
 
     if (Object.keys(errors).length === 0) {
       await newUser.save()
-        .then(() => res.redirect('/'))
-        .catch(() => next(new req.app.httpError.UnprocessableEntity('Can\'t save user')));
+        .then(() => res.status(200).json({ user: newUser }))
+        .catch(() => next(new req.app.httpError.InternalServerError('Can\'t save user')));
       return;
     }
 
-    res.status(422).render('users/new', { form: req.body, errors });
+    res.status(422).json({ message: 'Invalid user credentials', errors });
   } catch (error) {
     next(error);
   }

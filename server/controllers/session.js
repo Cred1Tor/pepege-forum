@@ -1,24 +1,45 @@
+import { v4 as uuid } from 'uuid';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import Token from '../models/Token.js';
 
-export const getAuthForm = (req, res) => {
-  res.render('session/new', { form: {} });
+const issueTokenPair = async (userId) => {
+  const newRefreshToken = uuid();
+  const newTokenEntry = new Token({ token: newRefreshToken, userId });
+  await newTokenEntry.save();
+
+  return {
+    token: jwt.sign({ id: userId }, process.env.JWT_SECRET),
+    refreshToken: newRefreshToken,
+  };
 };
 
-export const create = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (!user || !user.verifyPassword(password)) {
-    const error = 'Invalid email or password';
-    res.status(422).render('session/new', { form: req.body, error });
+    res.status(403).json({ error: 'Invalid email or password' });
     return;
   }
 
-  req.session.email = email;
-  res.redirect('/');
+  const tokenPair = await issueTokenPair(user.id);
+  res.status(200).json(tokenPair);
 };
 
-export const destroy = (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+export const refresh = async (req, res) => {
+  const { refreshToken } = req.body;
+  const dbToken = await Token.findOne({ token: refreshToken });
+  if (!dbToken) {
+    return;
+  }
+  await dbToken.deleteOne();
+  const tokenPair = await issueTokenPair(dbToken.userId);
+  res.status(200).json(tokenPair);
+};
+
+export const logout = async (req, res) => {
+  const userId = req.user.id;
+  await Token.deleteOne({ userId });
+  res.status(200).json({ success: true });
 };

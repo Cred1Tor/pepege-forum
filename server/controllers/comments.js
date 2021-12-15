@@ -1,90 +1,82 @@
-import {
-  requiredAuth,
-  verifyTopicId,
-  verifyCommentId,
-  authorizeForCommentEdition,
-} from '../utils/middlewares.js';
+import Topic from '../models/Topic.js';
+import Comment from '../models/Comment.js';
 
-export const create = [
-  requiredAuth,
-  verifyTopicId,
-  async (req, res, next) => {
-    try {
-      const topic = await req.app.models.Topic.findById(req.params.topicId);
-      const { body } = req.body;
-      const errors = {};
+export const create = async (req, res, next) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId);
+    const { body } = req.body;
+    const errors = {};
 
-      if (!body) {
-        errors.body = "Comment can't be blank";
-      }
-
-      if (Object.keys(errors).length === 0) {
-        const comment = await topic.addComment(body, res.locals.currentUser);
-        res.set('Comment-Id', comment.id);
-        res.status(201).render('topics/show', { topic, commentForm: {}, errors: {} });
-        return;
-      }
-
-      res.status(422);
-      res.render('topics/show', { topic, commentForm: req.body, errors });
-    } catch (error) {
-      next(error);
+    if (!body) {
+      errors.body = "Comment can't be blank";
     }
-  },
-];
 
-export const getCommentEditForm = [
-  verifyCommentId,
-  authorizeForCommentEdition,
-  async (req, res, next) => {
-    try {
-      const topic = await req.app.models.Topic.findById(req.params.topicId);
-      const comment = topic.findComment(req.params.commentId);
-      res.render('comments/edit', { comment, form: comment, errors: {} });
-    } catch (error) {
-      next(error);
+    if (Object.keys(errors).length === 0) {
+      const comment = new Comment({ body, creator: res.locals.user });
+      topic.comments.push(comment);
+      topic.commentCount += 1;
+      await topic.save()
+        .then(() => {
+          res.set('X-Comment-Id', comment.id);
+          res.set('X-Topic-Id', topic.id);
+          res.status(200).json(comment);
+        })
+        .catch((err) => next(err));
+      return;
     }
-  },
-];
 
-export const patch = [
-  verifyCommentId,
-  authorizeForCommentEdition,
-  async (req, res, next) => {
-    try {
-      const topic = await req.app.models.Topic.findById(req.params.topicId);
-      const comment = topic.findComment(req.params.commentId);
-      const { body } = req.body;
-      const errors = {};
+    res.status(422).json({ message: 'Invalid comment data', errors });
+  } catch (error) {
+    next(error);
+  }
+};
 
-      if (!body) {
-        errors.body = "Comment can't be blank";
-      }
+export const patch = async (req, res, next) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId);
+    const comment = topic.comments.id(req.params.commentId);
+    const { body } = req.body;
+    const errors = {};
 
-      if (Object.keys(errors).length === 0) {
-        await comment.edit(body, res.locals.currentUser);
-        res.render('topics/show', { topic, commentForm: {}, errors: {} });
-        return;
-      }
-
-      res.status(422);
-      res.render('comments/edit', { comment, form: req.body, errors });
-    } catch (error) {
-      next(error);
+    if (!body) {
+      errors.body = "Comment can't be blank";
     }
-  },
-];
 
-export const remove = [
-  verifyCommentId,
-  authorizeForCommentEdition,
-  async (req, res, next) => {
-    try {
-      const topic = await req.app.models.Topic.findById(req.params.topicId);
-      await topic.deleteComment(req.params.commentId);
-      res.render('topics/show', { topic, commentForm: {}, errors: {} });
-    } catch (error) {
-      next(error);
+    if (Object.keys(errors).length === 0) {
+      comment.body = body;
+      comment.editor = res.locals.user;
+      comment.editionDate = Date.now();
+      await topic.save()
+        .then(() => {
+          res.set('X-Comment-Id', comment.id);
+          res.set('X-Topic-Id', topic.id);
+          res.status(200).json(comment);
+        })
+        .catch((err) => next(err));
+      return;
     }
-  },
-];
+
+    res.status(422).json({ message: 'Invalid comment data', errors });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const remove = async (req, res, next) => {
+  try {
+    const topic = await Topic.findById(req.params.topicId);
+    const comment = topic.comments.id(req.params.commentId);
+    await comment.remove();
+    topic.commentCount -= 1;
+    await topic.save()
+      .then(() => {
+        res.set('X-Comment-Id', comment.id);
+        res.set('X-Topic-Id', topic.id);
+        res.status(200).json({ success: true, message: 'Comment deleted' });
+      })
+      .catch((err) => next(err));
+    return;
+  } catch (error) {
+    next(error);
+  }
+};

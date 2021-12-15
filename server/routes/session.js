@@ -1,9 +1,10 @@
-import { getAuthForm, create, destroy } from '../controllers/session.js';
+import jwtMiddleware from 'express-jwt';
+import { login, refresh, logout } from '../controllers/session.js';
 
 export default (app) => {
-  app.get('/session/new', getAuthForm);
+  app.post('/session', login);
 
-  app.post('/session', create);
+  app.post('/refresh', refresh);
 
-  app.delete('/session', destroy);
+  app.delete('/session', jwtMiddleware({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }), logout);
 };
