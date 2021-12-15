@@ -17,7 +17,7 @@ export const authorize = [
 
 export const verifyTopicId = async (req, _res, next) => {
   const topic = await Topic.findById(req.params.topicId)
-    .catch(() => next(new req.app.httpError.NotFound('Topic not found')));
+    .catch(() => next(new req.app.httpError.BadRequest('Invalid topic id')));
 
   if (!topic) {
     next(new req.app.httpError.NotFound('Topic not found'));
@@ -38,14 +38,14 @@ export const authorizeForTopicEdition = async (req, res, next) => {
 
 export const verifyCommentId = async (req, _res, next) => {
   const topic = await Topic.findById(req.params.topicId)
-    .catch(() => next(new req.app.httpError.NotFound('Topic not found')));
+    .catch(() => next(new req.app.httpError.BadRequest('Invalid topic id')));
 
   if (!topic) {
     return next(new req.app.httpError.NotFound('Topic not found'));
   }
 
   const comment = topic.comments.id(req.params.commentId)
-    .catch(() => next(new req.app.httpError.NotFound('Comment not found')));
+    .catch(() => next(new req.app.httpError.BadRequest('Invalid comment id')));
 
   if (!comment) {
     return next(new req.app.httpError.NotFound('Comment not found'));
