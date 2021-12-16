@@ -1,6 +1,6 @@
 import request from 'supertest';
-import getApp from '../server/index.js';
-import dbHandler from './helpers/db-handler.js';
+import getApp from '../server/index';
+import dbHandler from './helpers/db-handler';
 
 beforeAll(async () => dbHandler.connect());
 
