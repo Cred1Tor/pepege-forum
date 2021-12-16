@@ -39,6 +39,6 @@ export const refresh = async (req, res) => {
 
 export const logout = async (req, res) => {
   const userId = req.user.id;
-  await Token.deleteOne({ userId });
+  await Token.deleteMany({ userId });
   res.status(200).json({ success: true });
 };
