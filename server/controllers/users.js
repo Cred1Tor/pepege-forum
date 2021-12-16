@@ -28,13 +28,13 @@ export default async (req, res, next) => {
     }
 
     if (Object.keys(errors).length !== 0) {
-      throw new req.app.httpError(422, 'Invalid user credentials', { errors });
+      throw new req.app.HttpError(422, 'Invalid user credentials', { errors });
     }
 
     await newUser.save()
       .then(() => res.status(200).json({ user: newUser }))
       .catch(() => {
-        throw new req.app.httpError.InternalServerError('Can\'t save user');
+        throw new req.app.HttpError.InternalServerError('Can\'t save user');
       });
   } catch (error) {
     next(error);

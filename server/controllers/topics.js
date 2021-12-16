@@ -34,7 +34,7 @@ export const create = async (req, res, next) => {
     }
 
     if (Object.keys(errors).length !== 0) {
-      throw new req.app.httpError(422, 'Invalid topic data', { errors });
+      throw new req.app.HttpError(422, 'Invalid topic data', { errors });
     }
 
     await Topic.create({ title, body, creator: res.locals.user })
@@ -74,7 +74,7 @@ export const patch = async (req, res, next) => {
           res.set('X-Topic-Id', topic.id);
           res.status(200).json(topic);
         })
-        .catch(() => next(new req.app.httpError.InternalServerError('Can\'t save topic')));
+        .catch(() => next(new req.app.HttpError.InternalServerError('Can\'t save topic')));
       return;
     }
 
@@ -88,7 +88,7 @@ export const remove = async (req, res, next) => {
   try {
     await Topic.deleteOne({ _id: req.params.topicId })
       .then(() => res.status(200).json({ success: true, message: 'topic deleted' }))
-      .catch(() => next(new req.app.httpError.InternalServerError('Can\'t delete topic')));
+      .catch(() => next(new req.app.HttpError.InternalServerError('Can\'t delete topic')));
   } catch (error) {
     next(error);
   }

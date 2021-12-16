@@ -1,7 +1,7 @@
 import Express from 'express';
 import path from 'path';
 import methodOverride from 'method-override';
-import httpError from 'http-errors';
+import HttpError from 'http-errors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index';
@@ -25,7 +25,7 @@ export default async () => {
   app.use(Express.json());
   app.use('/assets', Express.static(path.join(__dirname, 'assets')));
 
-  app.httpError = httpError;
+  app.HttpError = HttpError;
 
   addRoutes(app);
 
@@ -35,7 +35,7 @@ export default async () => {
   }
 
   app.use((_req, _res, next) => {
-    next(new app.httpError.NotFound('Page not found'));
+    next(new app.HttpError.NotFound('Page not found'));
   });
 
   // eslint-disable-next-line no-unused-vars
