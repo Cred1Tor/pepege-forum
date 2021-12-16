@@ -1,3 +1,4 @@
+import HttpError from 'http-errors';
 import User from '../models/User';
 
 export default async (req, res, next) => {
@@ -28,13 +29,13 @@ export default async (req, res, next) => {
     }
 
     if (Object.keys(errors).length !== 0) {
-      throw new req.app.HttpError(422, 'Invalid user credentials', { errors });
+      throw new HttpError(422, 'Invalid user credentials', { errors });
     }
 
     await newUser.save()
       .then(() => res.status(200).json({ user: newUser }))
       .catch(() => {
-        throw new req.app.HttpError.InternalServerError('Can\'t save user');
+        throw new HttpError.InternalServerError('Can\'t save user');
       });
   } catch (error) {
     next(error);

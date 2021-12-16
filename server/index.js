@@ -22,8 +22,6 @@ export default async () => {
   app.use(Express.json());
   app.use('/assets', Express.static(path.join(__dirname, 'assets')));
 
-  app.HttpError = HttpError;
-
   addRoutes(app);
 
   if (process.env.NODE_ENV !== 'test') {
@@ -32,7 +30,7 @@ export default async () => {
   }
 
   app.use((_req, _res, next) => {
-    next(new app.HttpError.NotFound('Page not found'));
+    next(new HttpError.NotFound('Page not found'));
   });
 
   // eslint-disable-next-line no-unused-vars

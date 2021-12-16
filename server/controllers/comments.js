@@ -1,3 +1,4 @@
+import HttpError from 'http-errors';
 import Topic from '../models/Topic';
 import Comment from '../models/Comment';
 
@@ -12,7 +13,7 @@ export const create = async (req, res, next) => {
     }
 
     if (Object.keys(errors).length !== 0) {
-      throw new req.app.HttpError(422, 'Invalid comment data', { errors });
+      throw new HttpError(422, 'Invalid comment data', { errors });
     }
 
     const comment = new Comment({ body, creator: res.locals.user });
