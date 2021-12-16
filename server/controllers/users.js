@@ -27,14 +27,15 @@ export default async (req, res, next) => {
       errors.password = 'Password can\'t be blank';
     }
 
-    if (Object.keys(errors).length === 0) {
-      await newUser.save()
-        .then(() => res.status(200).json({ user: newUser }))
-        .catch(() => next(new req.app.httpError.InternalServerError('Can\'t save user')));
-      return;
+    if (Object.keys(errors).length !== 0) {
+      throw new req.app.httpError(422, 'Invalid user credentials', { errors });
     }
 
-    res.status(422).json({ message: 'Invalid user credentials', errors });
+    await newUser.save()
+      .then(() => res.status(200).json({ user: newUser }))
+      .catch(() => {
+        throw new req.app.httpError.InternalServerError('Can\'t save user');
+      });
   } catch (error) {
     next(error);
   }

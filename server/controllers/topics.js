@@ -33,17 +33,16 @@ export const create = async (req, res, next) => {
       errors.body = "Body can't be blank";
     }
 
-    if (Object.keys(errors).length === 0) {
-      await Topic.create({ title, body, creator: res.locals.user })
-        .then((topic) => {
-          res.set('X-Topic-Id', topic.id);
-          res.status(200).json(topic);
-        })
-        .catch((err) => next(err));
-      return;
+    if (Object.keys(errors).length !== 0) {
+      throw new req.app.httpError(422, 'Invalid topic data', { errors });
     }
 
-    res.status(422).json({ message: 'Invalid topic data', errors });
+    await Topic.create({ title, body, creator: res.locals.user })
+      .then((topic) => {
+        res.set('X-Topic-Id', topic.id);
+        res.status(200).json(topic);
+      })
+      .catch((err) => next(err));
   } catch (error) {
     next(error);
   }

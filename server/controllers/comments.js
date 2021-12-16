@@ -11,21 +11,20 @@ export const create = async (req, res, next) => {
       errors.body = "Comment can't be blank";
     }
 
-    if (Object.keys(errors).length === 0) {
-      const comment = new Comment({ body, creator: res.locals.user });
-      topic.comments.push(comment);
-      topic.commentCount += 1;
-      await topic.save()
-        .then(() => {
-          res.set('X-Comment-Id', comment.id);
-          res.set('X-Topic-Id', topic.id);
-          res.status(200).json(comment);
-        })
-        .catch((err) => next(err));
-      return;
+    if (Object.keys(errors).length !== 0) {
+      throw new req.app.httpError(422, 'Invalid comment data', { errors });
     }
 
-    res.status(422).json({ message: 'Invalid comment data', errors });
+    const comment = new Comment({ body, creator: res.locals.user });
+    topic.comments.push(comment);
+    topic.commentCount += 1;
+    await topic.save()
+      .then(() => {
+        res.set('X-Comment-Id', comment.id);
+        res.set('X-Topic-Id', topic.id);
+        res.status(200).json(comment);
+      })
+      .catch((err) => next(err));
   } catch (error) {
     next(error);
   }
