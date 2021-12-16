@@ -5,8 +5,8 @@ import httpError from 'http-errors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index';
-import models from './models/index';
 import users from './data/users.json';
+import User from './models/User';
 
 dotenv.config();
 
@@ -29,11 +29,9 @@ export default async () => {
 
   addRoutes(app);
 
-  app.models = models;
-
   if (process.env.NODE_ENV !== 'test') {
     import('./db');
-    await app.models.User.insertMany(users).catch(() => {});
+    await User.insertMany(users).catch(() => {});
   }
 
   app.use((_req, _res, next) => {
