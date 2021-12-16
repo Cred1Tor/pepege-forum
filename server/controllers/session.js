@@ -5,8 +5,7 @@ import Token from '../models/Token';
 
 const issueTokenPair = async (userId) => {
   const newRefreshToken = uuid();
-  const newTokenEntry = new Token({ token: newRefreshToken, userId });
-  await newTokenEntry.save();
+  await Token.create({ token: newRefreshToken, userId });
 
   return {
     token: jwt.sign({ id: userId }, process.env.JWT_SECRET),

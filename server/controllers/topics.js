@@ -34,9 +34,8 @@ export const create = async (req, res, next) => {
     }
 
     if (Object.keys(errors).length === 0) {
-      const topic = new Topic({ title, body, creator: res.locals.user });
-      await topic.save()
-        .then(() => {
+      await Topic.create({ title, body, creator: res.locals.user })
+        .then((topic) => {
           res.set('X-Topic-Id', topic.id);
           res.status(200).json(topic);
         })
