@@ -44,8 +44,7 @@ export const verifyCommentId = async (req, _res, next) => {
     return next(new req.app.httpError.NotFound('Topic not found'));
   }
 
-  const comment = topic.comments.id(req.params.commentId)
-    .catch(() => next(new req.app.httpError.BadRequest('Invalid comment id')));
+  const comment = topic.comments.id(req.params.commentId);
 
   if (!comment) {
     return next(new req.app.httpError.NotFound('Comment not found'));
