@@ -2,13 +2,10 @@ import Express from 'express';
 import path from 'path';
 import methodOverride from 'method-override';
 import HttpError from 'http-errors';
-import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import addRoutes from './routes/index';
 import users from './data/users.json';
 import User from './models/User';
-
-dotenv.config();
 
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);

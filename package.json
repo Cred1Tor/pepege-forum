@@ -6,7 +6,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "start": "NODE_ENV=production&NODE_OPTIONS='--experimental-json-modules --es-module-specifier-resolution=node' nodemon server/bin/server.js"
+    "start": "NODE_ENV=production&NODE_OPTIONS='--experimental-json-modules --es-module-specifier-resolution=node' nodemon server/bin/launch.js"
   },
   "keywords": [
     "express",
@@ -18,7 +18,8 @@
   "jest": {
     "modulePathIgnorePatterns": [
       "<rootDir>/__tests__/helpers/"
-    ]
+    ],
+    "setupFiles": ["<rootDir>/.jestEnv.js"]
   },
   "dependencies": {
     "dotenv": "^10.0.0",

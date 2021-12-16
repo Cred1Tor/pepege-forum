@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import jwtMiddleware from 'express-jwt';
 import Topic from '../models/Topic';
 import User from '../models/User';
-
-dotenv.config();
 
 export const authorize = [
   jwtMiddleware({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }),
