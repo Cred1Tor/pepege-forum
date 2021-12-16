@@ -1,5 +1,5 @@
-import User from './User.js';
-import Topic from './Topic.js';
-import Comment from './Comment.js';
+import User from './User';
+import Topic from './Topic';
+import Comment from './Comment';
 
 export default { User, Topic, Comment };

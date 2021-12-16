@@ -1,5 +1,5 @@
 import jwtMiddleware from 'express-jwt';
-import { login, refresh, logout } from '../controllers/session.js';
+import { login, refresh, logout } from '../controllers/session';
 
 export default (app) => {
   app.post('/session', login);

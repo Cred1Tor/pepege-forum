@@ -1,9 +1,9 @@
 import request from 'supertest';
-import getApp from '../server/index.js';
-import dbHandler from './helpers/db-handler.js';
-import User from '../server/models/User.js';
+import getApp from '../server/index';
+import dbHandler from './helpers/db-handler';
+import User from '../server/models/User';
 import users from '../__fixtures__/users.json';
-import issueToken from './helpers/issueToken.js';
+import issueToken from './helpers/issueToken';
 
 beforeAll(async () => dbHandler.connect());
 

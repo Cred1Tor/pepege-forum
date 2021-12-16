@@ -6,7 +6,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "start": "NODE_ENV=production&NODE_OPTIONS=--experimental-json-modules nodemon server/bin/server.js"
+    "start": "NODE_ENV=production&NODE_OPTIONS='--experimental-json-modules --es-module-specifier-resolution=node' nodemon server/bin/server.js"
   },
   "keywords": [
     "express",

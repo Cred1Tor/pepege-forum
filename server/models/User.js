@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import encrypt from '../utils/encrypt.js';
+import encrypt from '../utils/encrypt';
 
 export const userSchema = new mongoose.Schema({
   email: {

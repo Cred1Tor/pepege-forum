@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import Token from '../models/Token.js';
+import User from '../models/User';
+import Token from '../models/Token';
 
 const issueTokenPair = async (userId) => {
   const newRefreshToken = uuid();

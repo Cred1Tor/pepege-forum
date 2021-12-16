@@ -1,5 +1,5 @@
-import Topic from '../models/Topic.js';
-import Comment from '../models/Comment.js';
+import Topic from '../models/Topic';
+import Comment from '../models/Comment';
 
 export const create = async (req, res, next) => {
   try {

@@ -1,12 +1,12 @@
 import {
   create, patch, remove,
-} from '../controllers/comments.js';
+} from '../controllers/comments';
 import {
   authorize,
   verifyTopicId,
   verifyCommentId,
   authorizeForCommentEdition,
-} from '../utils/middlewares.js';
+} from '../utils/middlewares';
 
 export default (app) => {
   app.post('/topics/:topicId/comments', authorize, verifyTopicId, create);

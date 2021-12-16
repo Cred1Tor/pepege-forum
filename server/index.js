@@ -4,8 +4,8 @@ import methodOverride from 'method-override';
 import httpError from 'http-errors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import addRoutes from './routes/index.js';
-import models from './models/index.js';
+import addRoutes from './routes/index';
+import models from './models/index';
 import users from './data/users.json';
 
 dotenv.config();
@@ -32,7 +32,7 @@ export default async () => {
   app.models = models;
 
   if (process.env.NODE_ENV !== 'test') {
-    import('./db.js');
+    import('./db');
     await app.models.User.insertMany(users).catch(() => {});
   }
 

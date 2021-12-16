@@ -1,7 +1,7 @@
 import {
   getList, getTopic, create, patch, remove,
-} from '../controllers/topics.js';
-import { authorize, verifyTopicId, authorizeForTopicEdition } from '../utils/middlewares.js';
+} from '../controllers/topics';
+import { authorize, verifyTopicId, authorizeForTopicEdition } from '../utils/middlewares';
 
 export default (app) => {
   app.get('/topics', getList);

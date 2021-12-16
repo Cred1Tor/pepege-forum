@@ -1,7 +1,7 @@
-import users from './users.js';
-import session from './session.js';
-import topics from './topics.js';
-import comments from './comments.js';
+import users from './users';
+import session from './session';
+import topics from './topics';
+import comments from './comments';
 
 const controllers = [
   users,
