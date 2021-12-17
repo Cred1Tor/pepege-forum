@@ -1,17 +1,25 @@
-import jwtMiddleware from 'express-jwt';
+import jwt from 'jsonwebtoken';
 import HttpError from 'http-errors';
 import Topic from '../models/Topic';
 import User from '../models/User';
 
-export const authorize = [
-  jwtMiddleware({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }),
-  async (req, res, next) => {
-    const { id } = req.user;
-    res.locals.user = await User.findOne({ id })
-      .catch((err) => { throw err; });
+export const getAuthorizeMw = (opts) => async (req, res, next) => {
+  try {
+    const accessToken = req.get('Authorization')?.replace('Bearer ', '');
+
+    if (!accessToken) {
+      throw new HttpError(401, 'Jwt must be provided');
+    }
+
+    const tokenData = jwt.verify(accessToken, process.env.JWT_SECRET, opts);
+    req.user = {};
+    req.user.id = tokenData.id;
+    res.locals.user = await User.findOne({ id: tokenData.id });
     next();
-  },
-];
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const verifyTopicId = async (req, _res, next) => {
   const topic = await Topic.findById(req.params.topicId)

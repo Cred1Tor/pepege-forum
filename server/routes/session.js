@@ -1,10 +1,16 @@
-import jwtMiddleware from 'express-jwt';
-import { login, refresh, logout } from '../controllers/session';
+import { getAuthorizeMw } from '../utils/middlewares';
+import {
+  login, refresh, logout,
+} from '../controllers/session';
 
 export default (app) => {
   app.post('/session', login);
 
-  app.post('/refresh', refresh);
+  app.post('/session/refresh', refresh);
 
-  app.delete('/session', jwtMiddleware({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }), logout);
+  app.delete(
+    '/session',
+    getAuthorizeMw({ ignoreExpiration: true }),
+    logout,
+  );
 };

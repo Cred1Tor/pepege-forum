@@ -2,18 +2,18 @@ import {
   create, patch, remove,
 } from '../controllers/comments';
 import {
-  authorize,
+  getAuthorizeMw,
   verifyTopicId,
   verifyCommentId,
   authorizeForCommentEdition,
 } from '../utils/middlewares';
 
 export default (app) => {
-  app.post('/topics/:topicId/comments', authorize, verifyTopicId, create);
+  app.post('/topics/:topicId/comments', getAuthorizeMw(), verifyTopicId, create);
 
-  app.patch('/topics/:topicId/comments/:commentId', authorize, verifyCommentId, authorizeForCommentEdition, patch);
+  app.patch('/topics/:topicId/comments/:commentId', getAuthorizeMw(), verifyCommentId, authorizeForCommentEdition, patch);
 
-  app.delete('/topics/:topicId/comments/:commentId', authorize, verifyCommentId, authorizeForCommentEdition, remove);
+  app.delete('/topics/:topicId/comments/:commentId', getAuthorizeMw(), verifyCommentId, authorizeForCommentEdition, remove);
 
   return app;
 };

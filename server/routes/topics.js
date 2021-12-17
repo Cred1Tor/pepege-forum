@@ -1,18 +1,18 @@
 import {
   getList, getTopic, create, patch, remove,
 } from '../controllers/topics';
-import { authorize, verifyTopicId, authorizeForTopicEdition } from '../utils/middlewares';
+import { getAuthorizeMw, verifyTopicId, authorizeForTopicEdition } from '../utils/middlewares';
 
 export default (app) => {
   app.get('/topics', getList);
 
   app.get('/topics/:topicId', verifyTopicId, getTopic);
 
-  app.post('/topics', authorize, create);
+  app.post('/topics', getAuthorizeMw(), create);
 
-  app.patch('/topics/:topicId', authorize, verifyTopicId, authorizeForTopicEdition, patch);
+  app.patch('/topics/:topicId', getAuthorizeMw(), verifyTopicId, authorizeForTopicEdition, patch);
 
-  app.delete('/topics/:topicId', authorize, verifyTopicId, authorizeForTopicEdition, remove);
+  app.delete('/topics/:topicId', getAuthorizeMw(), verifyTopicId, authorizeForTopicEdition, remove);
 
   return app;
 };
