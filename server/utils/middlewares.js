@@ -3,7 +3,7 @@ import HttpError from 'http-errors';
 import Topic from '../models/Topic';
 import User from '../models/User';
 
-export const getAuthorizeMw = (opts) => async (req, res, next) => {
+export const authorize = async (req, res, next) => {
   try {
     const accessToken = req.get('Authorization')?.replace('Bearer ', '');
 
@@ -11,10 +11,9 @@ export const getAuthorizeMw = (opts) => async (req, res, next) => {
       throw new HttpError(401, 'Jwt must be provided');
     }
 
-    const tokenData = jwt.verify(accessToken, process.env.JWT_SECRET, opts);
-    req.user = {};
-    req.user.id = tokenData.id;
-    res.locals.user = await User.findOne({ id: tokenData.id });
+    const tokenData = jwt.verify(accessToken, process.env.JWT_SECRET);
+    req.user = tokenData.user;
+    res.locals.user = await User.findOne({ id: tokenData.user.id });
     next();
   } catch (error) {
     next(error);
@@ -35,7 +34,7 @@ export const verifyTopicId = async (req, _res, next) => {
 export const authorizeForTopicEdition = async (req, res, next) => {
   const topic = await Topic.findById(req.params.topicId);
 
-  if (topic.creator.id === res.locals.user.id || res.locals.user.isAdmin()) {
+  if (topic.creator.id === req.user.id || res.locals.user.isAdmin()) {
     return next();
   }
 

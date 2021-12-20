@@ -10,8 +10,8 @@ let adminAuthLine;
 beforeAll(async () => {
   await dbHandler.connect();
   await User.insertMany(users);
-  const { id: adminId } = await User.findOne({ email: users[0].email });
-  adminAuthLine = `Bearer ${issueToken({ id: adminId }, process.env.JWT_SECRET)}`;
+  const user = await User.findOne({ email: users[0].email });
+  adminAuthLine = `Bearer ${issueToken({ user }, process.env.JWT_SECRET)}`;
 });
 
 afterEach(async () => dbHandler.clearCollection('topics'));

@@ -11,8 +11,8 @@ let authLine;
 
 beforeEach(async () => {
   await User.insertMany(users);
-  const { id } = await User.findOne({ email: users[0].email });
-  authLine = `Bearer ${issueToken({ id }, process.env.JWT_SECRET)}`;
+  const user = await User.findOne({ email: users[0].email });
+  authLine = `Bearer ${issueToken({ user }, process.env.JWT_SECRET)}`;
 });
 
 afterEach(async () => dbHandler.clearDatabase());
@@ -28,7 +28,6 @@ describe('requests', () => {
       .expect(200)
       .then((response) => {
         expect(typeof response.body.token).toBe('string');
-        expect(typeof response.body.refreshToken).toBe('string');
       });
   });
 

@@ -14,10 +14,10 @@ beforeAll(async () => {
   await dbHandler.connect();
   await User.insertMany(users);
   app = await getApp();
-  const { id: adminId } = await User.findOne({ email: users[0].email });
-  const { id: userId } = await User.findOne({ email: users[1].email });
-  adminAuthLine = `Bearer ${issueToken({ id: adminId }, process.env.JWT_SECRET)}`;
-  userAuthLine = `Bearer ${issueToken({ id: userId }, process.env.JWT_SECRET)}`;
+  const adminUser = await User.findOne({ email: users[0].email });
+  const user = await User.findOne({ email: users[1].email });
+  adminAuthLine = `Bearer ${issueToken({ user: adminUser }, process.env.JWT_SECRET)}`;
+  userAuthLine = `Bearer ${issueToken({ user }, process.env.JWT_SECRET)}`;
 });
 
 beforeEach(async () => {
