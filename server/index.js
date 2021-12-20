@@ -15,12 +15,7 @@ const __dirname = path.dirname(__filename);
 export default async () => {
   const app = new Express();
 
-  app.set('view engine', 'pug');
-  app.set('views', path.join(__dirname, 'views'));
-  app.use(methodOverride('_method'));
-  app.use(Express.urlencoded({ extended: true }));
   app.use(Express.json());
-  app.use('/assets', Express.static(path.join(__dirname, 'assets')));
 
   addRoutes(app);
 
