@@ -1,16 +1,8 @@
 import Express from 'express';
-import path from 'path';
-import methodOverride from 'method-override';
 import HttpError from 'http-errors';
-import { fileURLToPath } from 'url';
 import addRoutes from './routes/index';
 import users from './data/users.json';
 import User from './models/User';
-
-// eslint-disable-next-line no-underscore-dangle
-const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line no-underscore-dangle
-const __dirname = path.dirname(__filename);
 
 export default async () => {
   const app = new Express();
