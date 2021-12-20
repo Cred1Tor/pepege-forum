@@ -22,5 +22,5 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   const userId = req.user.id;
-  res.status(200).json({ success: true, message: `User ${userId} logged out` });
+  res.status(200).json({ success: true, message: 'User logged out', userId });
 };
