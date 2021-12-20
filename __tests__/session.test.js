@@ -12,7 +12,7 @@ let authLine;
 beforeEach(async () => {
   await User.insertMany(users);
   const user = await User.findOne({ email: users[0].email });
-  authLine = `Bearer ${issueToken({ user }, process.env.JWT_SECRET)}`;
+  authLine = `Bearer ${issueToken({ userId: user.id }, process.env.JWT_SECRET)}`;
 });
 
 afterEach(async () => dbHandler.clearDatabase());

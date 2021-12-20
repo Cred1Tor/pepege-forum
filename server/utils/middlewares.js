@@ -12,8 +12,9 @@ export const authorize = async (req, res, next) => {
     }
 
     const tokenData = jwt.verify(accessToken, process.env.JWT_SECRET);
-    req.user = tokenData.user;
-    res.locals.user = await User.findOne({ id: tokenData.user.id });
+    req.user = {};
+    req.user.id = tokenData.userId;
+    res.locals.user = await User.findOne({ id: tokenData.userId });
     next();
   } catch (error) {
     next(error);

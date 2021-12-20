@@ -10,13 +10,7 @@ export const login = async (req, res) => {
     return;
   }
 
-  const userData = user.toObject();
-  /* eslint-disable no-underscore-dangle */
-  userData.id = userData._id;
-  delete userData._id;
-  delete userData.__v;
-  /* eslint-enable no-underscore-dangle */
-  const token = jwt.sign({ user: userData }, process.env.JWT_SECRET);
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
   res.status(200).json({ token });
 };
 
