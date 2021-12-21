@@ -26,13 +26,4 @@ const topicSchema = new mongoose.Schema({
   },
 });
 
-topicSchema.virtual('comments', {
-  ref: 'Comment',
-  localField: '_id',
-  foreignField: 'topicId',
-  justOne: false,
-});
-
-topicSchema.set('toJSON', { virtuals: true });
-
 export default mongoose.model('Topic', topicSchema);

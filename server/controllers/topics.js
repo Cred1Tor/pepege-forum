@@ -1,5 +1,6 @@
 import HttpError from 'http-errors';
 import Topic from '../models/Topic';
+import Comment from '../models/Comment';
 
 export const getList = async (req, res, next) => {
   try {
@@ -12,10 +13,11 @@ export const getList = async (req, res, next) => {
 
 export const getTopic = async (req, res, next) => {
   try {
-    const topic = await Topic.findById(req.params.topicId).populate('comments');
+    const topic = await Topic.findById(req.params.topicId);
+    const comments = await Comment.find({ topicId: topic.id });
     topic.viewCount += 1;
     await topic.save();
-    res.status(200).json(topic);
+    res.status(200).json({ topic, comments });
   } catch (error) {
     next(error);
   }
@@ -87,10 +89,9 @@ export const patch = async (req, res, next) => {
 
 export const remove = async (req, res, next) => {
   try {
-    const topic = await Topic.findOne({ _id: req.params.topicId }).populate('comments');
-    const { comments } = topic;
+    const topic = await Topic.findOne({ _id: req.params.topicId });
     await topic.deleteOne();
-    await Promise.all(comments.map((comment) => comment.deleteOne()));
+    await Comment.deleteMany({ topicId: topic.id });
     res.status(200).json({ success: true, message: 'topic deleted' });
   } catch (error) {
     next(error);
