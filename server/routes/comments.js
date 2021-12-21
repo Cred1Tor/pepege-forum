@@ -11,9 +11,9 @@ import {
 export default (app) => {
   app.post('/topics/:topicId/comments', authorize, verifyTopicId, create);
 
-  app.patch('/topics/:topicId/comments/:commentId', authorize, verifyCommentId, authorizeForCommentEdition, patch);
+  app.patch('/topics/:topicId/comments/:commentId', authorize, verifyTopicId, verifyCommentId, authorizeForCommentEdition, patch);
 
-  app.delete('/topics/:topicId/comments/:commentId', authorize, verifyCommentId, authorizeForCommentEdition, remove);
+  app.delete('/topics/:topicId/comments/:commentId', authorize, verifyTopicId, verifyCommentId, authorizeForCommentEdition, remove);
 
   return app;
 };

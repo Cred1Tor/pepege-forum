@@ -16,8 +16,9 @@ export const create = async (req, res, next) => {
       throw new HttpError(422, 'Invalid comment data', { errors });
     }
 
-    const comment = new Comment({ body, creator: res.locals.user });
-    topic.comments.push(comment);
+    const comment = new Comment({ body, creator: res.locals.user, topicId: topic.id });
+    await comment.save();
+    // topic.comments.push(comment);
     topic.commentCount += 1;
     await topic.save()
       .then(() => {
@@ -33,8 +34,9 @@ export const create = async (req, res, next) => {
 
 export const patch = async (req, res, next) => {
   try {
-    const topic = await Topic.findById(req.params.topicId);
-    const comment = topic.comments.id(req.params.commentId);
+    // const topic = await Topic.findById(req.params.topicId);
+    const comment = await Comment.findById(req.params.commentId);
+    // const comment = topic.comments.id(req.params.commentId);
     const { body } = req.body;
     const errors = {};
 
@@ -46,10 +48,10 @@ export const patch = async (req, res, next) => {
       comment.body = body;
       comment.editor = res.locals.user;
       comment.editionDate = Date.now();
-      await topic.save()
+      await comment.save()
         .then(() => {
           res.set('X-Comment-Id', comment.id);
-          res.set('X-Topic-Id', topic.id);
+          res.set('X-Topic-Id', req.params.topicId);
           res.status(200).json(comment);
         })
         .catch((err) => next(err));
@@ -65,8 +67,8 @@ export const patch = async (req, res, next) => {
 export const remove = async (req, res, next) => {
   try {
     const topic = await Topic.findById(req.params.topicId);
-    const comment = topic.comments.id(req.params.commentId);
-    await comment.remove();
+    const comment = await Comment.findById(req.params.commentId);
+    await comment.deleteOne();
     topic.commentCount -= 1;
     await topic.save()
       .then(() => {
@@ -74,7 +76,9 @@ export const remove = async (req, res, next) => {
         res.set('X-Topic-Id', topic.id);
         res.status(200).json({ success: true, message: 'Comment deleted' });
       })
-      .catch((err) => next(err));
+      .catch((err) => {
+        next(err);
+      });
     return;
   } catch (error) {
     next(error);

@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
-import { commentSchema } from './Comment';
 import { userSchema } from './User';
 
 const topicSchema = new mongoose.Schema({
-  comments: [commentSchema],
   title: {
     type: String,
     required: [true, 'Title is required'],
@@ -28,5 +26,14 @@ const topicSchema = new mongoose.Schema({
     default: 0,
   },
 });
+
+topicSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'topicId',
+  justOne: false,
+});
+
+topicSchema.set('toJSON', { virtuals: true });
 
 export default mongoose.model('Topic', topicSchema);

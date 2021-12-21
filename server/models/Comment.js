@@ -13,6 +13,7 @@ export const commentSchema = new mongoose.Schema({
   editionDate: Date,
   creator: userSchema,
   editor: userSchema,
+  topicId: { type: mongoose.ObjectId, ref: 'Topic' },
 });
 
 export default mongoose.model('Comment', commentSchema);

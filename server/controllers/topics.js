@@ -12,7 +12,7 @@ export const getList = async (req, res, next) => {
 
 export const getTopic = async (req, res, next) => {
   try {
-    const topic = await Topic.findById(req.params.topicId);
+    const topic = await Topic.findById(req.params.topicId).populate('comments');
     topic.viewCount += 1;
     await topic.save();
     res.status(200).json(topic);
@@ -87,9 +87,11 @@ export const patch = async (req, res, next) => {
 
 export const remove = async (req, res, next) => {
   try {
-    await Topic.deleteOne({ _id: req.params.topicId })
-      .then(() => res.status(200).json({ success: true, message: 'topic deleted' }))
-      .catch(() => next(new HttpError.InternalServerError('Can\'t delete topic')));
+    const topic = await Topic.findOne({ _id: req.params.topicId }).populate('comments');
+    const { comments } = topic;
+    await topic.deleteOne();
+    await Promise.all(comments.map((comment) => comment.deleteOne()));
+    res.status(200).json({ success: true, message: 'topic deleted' });
   } catch (error) {
     next(error);
   }

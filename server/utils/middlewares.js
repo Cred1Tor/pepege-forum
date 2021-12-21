@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import HttpError from 'http-errors';
 import Topic from '../models/Topic';
 import User from '../models/User';
+import Comment from '../models/Comment';
 
 export const authorize = async (req, res, next) => {
   try {
@@ -43,14 +44,8 @@ export const authorizeForTopicEdition = async (req, res, next) => {
 };
 
 export const verifyCommentId = async (req, _res, next) => {
-  const topic = await Topic.findById(req.params.topicId)
-    .catch(() => next(new HttpError.BadRequest('Invalid topic id')));
-
-  if (!topic) {
-    return next(new HttpError.NotFound('Topic not found'));
-  }
-
-  const comment = topic.comments.id(req.params.commentId);
+  const comment = await Comment.findById(req.params.commentId)
+    .catch(() => next(new HttpError.BadRequest('Invalid comment id')));
 
   if (!comment) {
     return next(new HttpError.NotFound('Comment not found'));
@@ -60,8 +55,7 @@ export const verifyCommentId = async (req, _res, next) => {
 };
 
 export const authorizeForCommentEdition = async (req, res, next) => {
-  const topic = await Topic.findById(req.params.topicId);
-  const comment = topic.comments.id(req.params.commentId);
+  const comment = await Comment.findById(req.params.commentId);
 
   if (comment.creator.id === res.locals.user.id || res.locals.user.isAdmin()) {
     return next();
