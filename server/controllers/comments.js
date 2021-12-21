@@ -16,9 +16,7 @@ export const create = async (req, res, next) => {
       throw new HttpError(422, 'Invalid comment data', { errors });
     }
 
-    const comment = new Comment({ body, creator: res.locals.user, topicId: topic.id });
-    await comment.save();
-    // topic.comments.push(comment);
+    const comment = await Comment.create({ body, creator: res.locals.user, topicId: topic.id });
     topic.commentCount += 1;
     await topic.save()
       .then(() => {
