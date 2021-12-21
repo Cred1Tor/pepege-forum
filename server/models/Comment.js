@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { userSchema } from './User';
 
 export const commentSchema = new mongoose.Schema({
   body: {
@@ -11,8 +10,8 @@ export const commentSchema = new mongoose.Schema({
     default: Date.now(),
   },
   editionDate: Date,
-  creator: userSchema,
-  editor: userSchema,
+  creatorId: { type: mongoose.ObjectId, ref: 'User' },
+  editorId: { type: mongoose.ObjectId, ref: 'User' },
   topicId: { type: mongoose.ObjectId, ref: 'Topic' },
 });
 

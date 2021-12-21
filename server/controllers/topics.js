@@ -38,7 +38,7 @@ export const create = async (req, res, next) => {
       throw new HttpError(422, 'Invalid topic data', { errors });
     }
 
-    await Topic.create({ title, body, creator: res.locals.user })
+    await Topic.create({ title, body, creatorId: res.locals.user.id })
       .then((topic) => {
         res.set('X-Topic-Id', topic.id);
         res.status(200).json(topic);
@@ -67,7 +67,7 @@ export const patch = async (req, res, next) => {
     if (Object.keys(errors).length === 0) {
       topic.title = title;
       topic.body = body;
-      topic.editor = res.locals.user;
+      topic.editorId = res.locals.user.id;
       topic.editionDate = Date.now();
 
       await topic.save()

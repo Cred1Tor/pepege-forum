@@ -36,7 +36,7 @@ export const verifyTopicId = async (req, _res, next) => {
 export const authorizeForTopicEdition = async (req, res, next) => {
   const topic = await Topic.findById(req.params.topicId);
 
-  if (topic.creator.id === req.user.id || res.locals.user.isAdmin()) {
+  if (topic.creatorId === req.user.id || res.locals.user.isAdmin()) {
     return next();
   }
 
@@ -57,7 +57,7 @@ export const verifyCommentId = async (req, _res, next) => {
 export const authorizeForCommentEdition = async (req, res, next) => {
   const comment = await Comment.findById(req.params.commentId);
 
-  if (comment.creator.id === res.locals.user.id || res.locals.user.isAdmin()) {
+  if (comment.creatorId === res.locals.user.id || res.locals.user.isAdmin()) {
     return next();
   }
 

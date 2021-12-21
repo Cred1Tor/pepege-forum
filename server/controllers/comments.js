@@ -46,7 +46,7 @@ export const patch = async (req, res, next) => {
 
     if (Object.keys(errors).length === 0) {
       comment.body = body;
-      comment.editor = res.locals.user;
+      comment.editorId = res.locals.user.id;
       comment.editionDate = Date.now();
       await comment.save()
         .then(() => {

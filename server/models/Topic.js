@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { userSchema } from './User';
 
 const topicSchema = new mongoose.Schema({
   title: {
@@ -15,8 +14,8 @@ const topicSchema = new mongoose.Schema({
     default: Date.now(),
   },
   editionDate: Date,
-  creator: userSchema,
-  editor: userSchema,
+  creatorId: { type: mongoose.ObjectId, ref: 'User' },
+  editorId: { type: mongoose.ObjectId, ref: 'User' },
   viewCount: {
     type: Number,
     default: 0,
