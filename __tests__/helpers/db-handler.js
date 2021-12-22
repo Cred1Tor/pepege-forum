@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
-let mongod;
+let replset;
 
 /**
  * Connect to the in-memory database.
  */
 const connect = async () => {
-  mongod = await MongoMemoryServer.create();
-  const uri = mongod.getUri();
+  replset = await MongoMemoryReplSet.create();
+  const uri = replset.getUri();
 
   await mongoose.connect(uri);
 };
@@ -17,10 +17,10 @@ const connect = async () => {
  * Drop database, close the connection and stop mongod.
  */
 const closeDatabase = async () => {
-  if (mongod) {
+  if (replset) {
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
-    await mongod.stop();
+    await replset.stop();
   }
 };
 
@@ -28,7 +28,7 @@ const closeDatabase = async () => {
  * Remove all the data for all db collections.
  */
 const clearDatabase = async () => {
-  if (mongod) {
+  if (replset) {
     const { collections } = mongoose.connection;
 
     Object.values(collections).forEach(async (collection) => {
@@ -38,7 +38,7 @@ const clearDatabase = async () => {
 };
 
 const clearCollection = async (collection) => {
-  if (mongod) {
+  if (replset) {
     await mongoose.connection.collections[collection].deleteMany();
   }
 };
