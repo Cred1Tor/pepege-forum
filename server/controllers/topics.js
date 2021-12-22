@@ -90,8 +90,16 @@ export const patch = async (req, res, next) => {
 export const remove = async (req, res, next) => {
   try {
     const topic = await Topic.findOne({ _id: req.params.topicId });
-    await topic.deleteOne();
-    await Comment.deleteMany({ topicId: topic.id });
+
+    const session = await Topic.startSession();
+
+    await session.withTransaction(async () => {
+      await topic.deleteOne({}, () => {}, { session });
+      return Comment.deleteMany({ topicId: topic.id }, { session });
+    });
+
+    session.endSession();
+
     res.status(200).json({ success: true, message: 'topic deleted' });
   } catch (error) {
     next(error);
