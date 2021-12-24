@@ -22,7 +22,9 @@ export default async () => {
 
   // eslint-disable-next-line no-unused-vars
   app.use((error, _req, res, _next) => {
-    res.status(error.status || 500).json(error);
+    res.status(error.status || 500).json(
+      Object.keys(error).length !== 0 ? error : { error: error.toString() },
+    );
   });
 
   return app;
