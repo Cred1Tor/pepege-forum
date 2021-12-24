@@ -26,4 +26,11 @@ const topicSchema = new mongoose.Schema({
   },
 });
 
+topicSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'topicId',
+  justOne: false,
+});
+
 export default mongoose.model('Topic', topicSchema);

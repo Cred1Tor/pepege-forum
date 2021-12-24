@@ -1,6 +1,5 @@
 import HttpError from 'http-errors';
 import Topic from '../models/Topic';
-import Comment from '../models/Comment';
 
 export const getList = async (req, res, next) => {
   try {
@@ -13,11 +12,10 @@ export const getList = async (req, res, next) => {
 
 export const getTopic = async (req, res, next) => {
   try {
-    const topic = await Topic.findById(req.params.topicId);
-    const comments = await Comment.find({ topicId: topic.id });
+    const topic = await Topic.findById(req.params.topicId).populate('comments');
     topic.viewCount += 1;
     await topic.save();
-    res.status(200).json({ topic, comments });
+    res.status(200).json({ topic, comments: topic.comments });
   } catch (error) {
     next(error);
   }
@@ -89,16 +87,23 @@ export const patch = async (req, res, next) => {
 
 export const remove = async (req, res, next) => {
   try {
-    const topic = await Topic.findOne({ _id: req.params.topicId });
+    const topic = await Topic.findById(req.params.topicId).populate('comments');
 
     const session = await Topic.startSession();
+    session.startTransaction();
 
-    await session.withTransaction(async () => {
-      await topic.deleteOne({}, () => {}, { session });
-      return Comment.deleteMany({ topicId: topic.id }, { session });
-    });
-
-    session.endSession();
+    try {
+      await topic.remove({ session });
+      await Promise.all(topic.comments.map(
+        (comment) => comment.remove({ session }),
+      ));
+      await session.commitTransaction();
+      session.endSession();
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
 
     res.status(200).json({ success: true, message: 'topic deleted' });
   } catch (error) {
